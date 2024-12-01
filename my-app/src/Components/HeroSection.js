@@ -11,8 +11,8 @@ function HeroSection() {
           <Typography variant="h5" className="hero-subtitle">
             Professional & Lifelong Learning
           </Typography>
-          <Typography variant="h2" className="hero-title">
-            Online Courses With Certificates
+          <Typography variant="h4" className="hero-title">
+          Learn Your Way: Online or Offline, Anytime, Anywhere!
           </Typography>
         </Box>
         <Box className="hero-image">
