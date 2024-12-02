@@ -187,7 +187,7 @@ const CreateCourse = () => {
       if (response.ok) {
         console.log('Course created successfully:', data);
         alert('Course created successfully!');
-        navigate('/instructor-dashboard'); // Redirect to instructor dashboard page
+        window.location.href = '/instructor-dashboard';  // Redirect to instructor dashboard page
       } else {
         console.error('Failed to create course:', data.message);
         alert('Failed to create course');

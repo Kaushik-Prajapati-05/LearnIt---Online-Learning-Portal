@@ -1,296 +1,250 @@
-import React, { useState, useEffect } from 'react';
-import './Styles/CoursePage.css';
-import { ExpandMore, ArrowBack, ArrowForward } from '@mui/icons-material';
-import { Collapse, Pagination, IconButton } from '@mui/material';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Divider } from '@mui/material';
+import { Person, AccessTime } from '@mui/icons-material'; // Import MUI icons
+import './Styles/CoursesCatalog.css';
+import img1 from '../Assets/1.jpeg';
+import img2 from '../Assets/2.jpeg';
+import img3 from '../Assets/3.jpeg';
+import img4 from '../Assets/4.jpeg';
+import img5 from '../Assets/5.jpeg';
+import img6 from '../Assets/6.jpeg';
+import img7 from '../Assets/7.jpeg';
+import img8 from '../Assets/8.jpeg';
+import img9 from '../Assets/9.jpeg';
+import img10 from '../Assets/10.jpeg';
+import img11 from '../Assets/11.jpeg';
+import img12 from '../Assets/12.jpeg';
+import img13 from '../Assets/13.jpeg';
 
-function CourseCatalog({ courseData }) {
-  const [modules, setModules] = useState([]);
-  const [completedLessons, setCompletedLessons] = useState([]);
-  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
-  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-  const [openModules, setOpenModules] = useState([]);
-  const [quizAnswers, setQuizAnswers] = useState({});
-  const [quizResults, setQuizResults] = useState(null);
-  const [quizPage, setQuizPage] = useState(1);
-  const [showQuizFinalResults, setShowQuizFinalResults] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(true);
-  const [showAnswers, setShowAnswers] = useState(false);
-  const { state } = useLocation();
+const courses = [
+  {
+    id: 1,
+    category: "Web Development",
+    title: "HTML & CSS for Beginners",
+    description: "Learn the basics of web development with HTML and CSS.",
+    students: 400,
+    duration: "4 Weeks",
+    price: "Free",
+    imgSrc: img1,
+  },
+  {
+    id: 2,
+    category: "Web Development",
+    title: "JavaScript Essentials",
+    description: "Understand the fundamentals of JavaScript for building interactive websites.",
+    students: 320,
+    duration: "6 Weeks",
+    price: "$39.00",
+    imgSrc: img2,
+  },
+  {
+    id: 3,
+    category: "Web Development",
+    title: "Responsive Web Design",
+    description: "Create websites that look great on any device.",
+    students: 210,
+    duration: "5 Weeks",
+    price: "$49.00",
+    imgSrc: img3,
+  },
+  {
+    id: 4,
+    category: "Machine Learning",
+    title: "Introduction to Machine Learning",
+    description: "An introduction to the basics of machine learning concepts.",
+    students: 150,
+    duration: "8 Weeks",
+    price: "$99.00",
+    imgSrc: img4,
+  },
+  {
+    id: 5,
+    category: "Machine Learning",
+    title: "Deep Learning Fundamentals",
+    description: "Learn the fundamentals of deep learning and neural networks.",
+    students: 300,
+    duration: "10 Weeks",
+    price: "$129.00",
+    imgSrc: img5,
+  },
+  {
+    id: 6,
+    category: "Machine Learning",
+    title: "Natural Language Processing",
+    description: "Explore NLP techniques for working with text data.",
+    students: 200,
+    duration: "6 Weeks",
+    price: "$89.00",
+    imgSrc: img6,
+  },
+  {
+    id: 7,
+    category: "Data Science",
+    title: "Data Science Essentials",
+    description: "Start your data science journey with this introductory course.",
+    students: 270,
+    duration: "6 Weeks",
+    price: "$59.00",
+    imgSrc: img7,
+  },
+  {
+    id: 8,
+    category: "Data Science",
+    title: "Python for Data Science",
+    description: "Learn Python programming for data analysis and data science.",
+    students: 380,
+    duration: "5 Weeks",
+    price: "$49.00",
+    imgSrc: img8,
+  },
+  {
+    id: 9,
+    category: "Data Science",
+    title: "Data Visualization with Python",
+    description: "Create stunning visualizations with Python libraries.",
+    students: 330,
+    duration: "4 Weeks",
+    price: "$39.00",
+    imgSrc: img9,
+  },
+  {
+    id: 10,
+    category: "Web Development",
+    title: "React for Beginners",
+    description: "Learn the basics of React and build dynamic web applications.",
+    students: 500,
+    duration: "7 Weeks",
+    price: "$79.00",
+    imgSrc: img10,
+  },
+  {
+    id: 11,
+    category: "Machine Learning",
+    title: "Computer Vision",
+    description: "Get started with computer vision techniques and applications.",
+    students: 290,
+    duration: "9 Weeks",
+    price: "$109.00",
+    imgSrc: img11,
+  },
+  {
+    id: 12,
+    category: "Data Science",
+    title: "Statistics for Data Science",
+    description: "Master statistical concepts essential for data science.",
+    students: 410,
+    duration: "8 Weeks",
+    price: "$69.00",
+    imgSrc: img12,
+  },
+  {
+    id: 13,
+    category: "Web Development",
+    title: "React for Beginners",
+    description: "Learn the basics of React and build dynamic web applications.",
+    students: 500,
+    duration: "7 Weeks",
+    price: "$79.00",
+    imgSrc: img13,
+  },
+];
 
-  // Fetch or set course data dynamically
+function CourseCatalog() {
+  const [courses, setCourses] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const navigate = useNavigate();
+
+
   useEffect(() => {
-    if (courseData) {
-      setModules(courseData);
-    } else {
-      axios.get(`http://localhost:8000/apix/course?id=${state}`)
-        .then(response => setModules(response.data.data.curriculum))
-        .catch(error => console.error('Error fetching course data:', error));
-    }
-  }, [courseData]);
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/instructor/course/get',{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          
+      });
+        const data = await response.json();
+        setCourses(data.data);
+        // console.log(courses)
+        // console.log(data.data[0])
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
 
-  // If modules data hasn't loaded yet, show a loading state
-  if (!modules.length) {
-    return <div>Loading...</div>;
+    fetchCourses();
+  }, [selectedCategory]);
+  // console.log(course);
+  const ans=courses;
+  console.log(ans);   
+
+  const filteredCourses = selectedCategory === "All"
+    ? courses
+    : courses.filter(course => course.category === selectedCategory);
+
+  const coursesToShow = showAllCourses ? filteredCourses : filteredCourses.slice(0, 4);
+
+  const handleViewAll = () => {
+    setShowAllCourses(true);
+  };
+
+  const handleStart =(cid)=>{
+    // navigate('/learncourse',{state : cid});
   }
 
-  const totalLessons = modules.reduce((acc, module) => acc + module.items.length, 0);
-  const progressPercentage = Math.round((completedLessons.length / totalLessons) * 100);
-  const currentLesson = modules[currentModuleIndex]?.items[currentLessonIndex];
-
-  const markAsComplete = () => {
-    const lessonKey = `${currentModuleIndex}-${currentLessonIndex}`;
-    if (!completedLessons.includes(lessonKey)) {
-      setCompletedLessons([...completedLessons, lessonKey]);
-    }
-  };
-
-  const navigateNext = () => {
-    if (currentLessonIndex < modules[currentModuleIndex].items.length - 1) {
-      setCurrentLessonIndex(currentLessonIndex + 1);
-    } else if (currentModuleIndex < modules.length - 1) {
-      setCurrentModuleIndex(currentModuleIndex + 1);
-      setCurrentLessonIndex(0);
-    }
-  };
-
-  const navigatePrevious = () => {
-    if (currentLessonIndex > 0) {
-      setCurrentLessonIndex(currentLessonIndex - 1);
-    } else if (currentModuleIndex > 0) {
-      setCurrentModuleIndex(currentModuleIndex - 1);
-      setCurrentLessonIndex(modules[currentModuleIndex - 1].items.length - 1);
-    }
-  };
-
-  const handleLessonClick = (moduleIndex, lessonIndex) => {
-    setCurrentModuleIndex(moduleIndex);
-    setCurrentLessonIndex(lessonIndex);
-    setQuizPage(1);
-    setShowQuizFinalResults(false);
-    setShowAnswers(false);
-    setShowInstructions(true);
-  };
-
-  const toggleModule = (index) => {
-    setOpenModules((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
-
-  const handleQuizAnswer = (questionIndex, optionIndex) => {
-    const lessonTitle = currentLesson.title;
-    setQuizAnswers((prev) => ({
-      ...prev,
-      [lessonTitle]: {
-        ...prev[lessonTitle],
-        [questionIndex]: optionIndex,
-      },
-    }));
-  };
-
-  const calculateQuizResults = () => {
-    const quiz = currentLesson.quiz;
-    const answers = quizAnswers[currentLesson.title] || {};
-    const correctAnswersCount = quiz.questions.filter(
-      (q, i) => answers[i] === q.correctAnswer
-    ).length;
-
-    setQuizResults(correctAnswersCount);
-    setShowQuizFinalResults(true);
-    setShowAnswers(true);
-
-    if (correctAnswersCount >= quiz.passingMarks) {
-      markAsComplete();
-    }
-  };
-
-  const handleQuizPageChange = (event, value) => {
-    setQuizPage(value);
-  };
-
-  const resetQuiz = () => {
-    setQuizAnswers({});
-    setQuizResults(null);
-    setQuizPage(1);
-    setShowQuizFinalResults(false);
-    setShowAnswers(false);
-    setShowInstructions(true);
-  };
-
-  const isLastLesson =
-    currentModuleIndex === modules.length - 1 &&
-    currentLessonIndex === modules[modules.length - 1].items.length - 1;
-  const isFirstLesson = currentModuleIndex === 0 && currentLessonIndex === 0;
-
-  const renderQuizResponses = () => {
-    if (!showAnswers) return null;
-
-    const correctAnswers = quizResults;
-    const totalQuestions = currentLesson.quiz.questions.length;
-    const percentage = (correctAnswers / totalQuestions) * 100;
-
-    return (
-      <div className="quiz-answer">
-        <div className="progress-circle">
-          <CircularProgressbar
-            value={percentage}
-            text={`${quizResults}/${totalQuestions}`}
-            styles={buildStyles({
-              pathColor: percentage >= 80 ? 'green' : 'red',
-              textColor: percentage >= 80 ? 'green' : 'red',
-            })}
-          />
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div className="course-page">
-      <div className="course-header">
-        <div className="back-button" onClick={() => window.history.back()}>
-          <ArrowBack />
-        </div>
-        <div className="header-title">Introduction LearnPress – LMS Plugin</div>
+    <div className="course-catalog">
+      <div className="categories">
+        <h2 className={`category ${selectedCategory === "All" ? "active" : ""}} onClick={() => setSelectedCategory("All")`}>All</h2>
+        <h2 className={`category ${selectedCategory === "Web Development" ? "active" : ""}} onClick={() => setSelectedCategory("Web Development")`}>Web Development</h2>
+        <h2 className={`category ${selectedCategory === "Machine Learning" ? "active" : ""}} onClick={() => setSelectedCategory("Machine Learning")`}>Machine Learning</h2>
+        <h2 className={`category ${selectedCategory === "Data Science" ? "active" : ""}} onClick={() => setSelectedCategory("Data Science")`}>Data Science</h2>
       </div>
 
-      <div className="progress-bar">
-        <div className="progress" style={{ width: `${progressPercentage}%` }}></div>
-      </div>
-
-      <div className="course-container">
-        <div className="course-sidebar">
-          <h2>Curriculum</h2>
-          {modules.map((module, moduleIndex) => (
-            <div key={moduleIndex} className="module">
-              <h3 onClick={() => toggleModule(moduleIndex)}>
-                {module.title}
-                <ExpandMore
-                  className="dropdown-icon"
-                  style={{
-                    transform: openModules.includes(moduleIndex) ? 'rotate(180deg)' : '',
-                  }}
-                />
-              </h3>
-              <Collapse in={openModules.includes(moduleIndex)}>
-                <ul>
-                  {module.items.map((lesson, lessonIndex) => {
-                    const lessonKey = `${moduleIndex}-${lessonIndex}`;
-                    return (
-                      <li
-                        key={lessonIndex}
-                        className={`lesson ${completedLessons.includes(lessonKey) ? 'completed' : ''}`}
-                        onClick={() => handleLessonClick(moduleIndex, lessonIndex)}
-                      >
-                        <span>{lesson.title}</span>
-                        {lesson.type === 'video' && (
-                          <IconButton
-                            color="primary"
-                            onClick={() => window.open(`/download-pdf/${moduleIndex}`, '_blank')}
-                            title="Download PDF"
-                            size="small"
-                            sx={{ marginLeft: 'auto', color: '#ff9100', marginRight: '7px' }}
-                          >
-                            <PictureAsPdfIcon />
-                          </IconButton>
-                        )}
-                        <span className="lesson-time">{lesson.time}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </Collapse>
+      <div className="course-grid">
+        {coursesToShow.map(course => (
+          <div key={course._id} className="course-card">
+            <img src={course.image} alt={course.title} className="course-image" />
+            <div className="course-category">{course.category}</div>
+            <h3 className="course-title">{course.title}</h3>
+              <div className="course-info">
+              <span className="course-stats">
+                <Person className="icon" />
+                <span>{course.students.length} Students</span> { /* need to change */ }
+              </span> 
+              <Divider
+                orientation="vertical"
+                sx={{
+                  height: '18px',
+                  borderRight: '2px solid #888',
+                  margin: '0 12px',
+                }}
+              />
+              <span className="course-stats">
+                <AccessTime className="icon" />
+                <span>{course.duration}</span>
+              </span>
             </div>
-          ))}
-        </div>
-
-        <div className="course-content">
-          <h2>{currentLesson?.title}</h2>
-          {currentLesson?.type === 'video' && (
-            <>
-              <p>{`${currentLesson.title} content description...`}</p>
-              <video controls className="module-video">
-                <source src="your-video-url.mp4" type="video/mp4" />
-              </video>
-              <button className="complete-button" onClick={markAsComplete}>
-                Mark as Complete
-              </button>
-            </>
-          )}
-
-          {currentLesson?.type === 'quiz' && (
-            <>
-              {showInstructions ? (
-                <>
-                  <h3>Quiz Instructions</h3>
-                  <ul className="instruction-page">
-                    <li>Read each question carefully.</li>
-                    <li>Select the most appropriate answer for each question.</li>
-                    <li>You need to answer at least {currentLesson.quiz.passingMarks} questions correctly to pass the quiz.</li>
-                    <li>You can navigate through questions using the pagination at the bottom.</li>
-                    <li>Once you’ve answered all questions, click "Submit Quiz" to view results.</li>
-                  </ul>
-                  <button className="complete-button" onClick={() => setShowInstructions(false)}>
-                    Start Quiz
-                  </button>
-                </>
-              ) : (
-                <>
-                  {!showQuizFinalResults ? (
-                    <>
-                      <h3>{currentLesson.quiz.questions[quizPage - 1].question}</h3>
-                      <ul className="quiz-options">
-                        {currentLesson.quiz.questions[quizPage - 1].options.map((option, index) => (
-                          <li
-                            key={index}
-                            onClick={() => handleQuizAnswer(quizPage - 1, index)}
-                            className={quizAnswers[currentLesson.title]?.[quizPage - 1] === index ? 'selected' : ''}
-                          >
-                            {option}
-                          </li>
-                        ))}
-                      </ul>
-                      <Pagination
-                        count={currentLesson.quiz.questions.length}
-                        page={quizPage}
-                        onChange={handleQuizPageChange}
-                      />
-                      {quizPage === currentLesson.quiz.questions.length && (
-                        <button className="complete-button" onClick={calculateQuizResults}>
-                          Submit Quiz
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {renderQuizResponses()}
-                      <button className="complete-button" onClick={resetQuiz}>
-                        Retry Quiz
-                      </button>
-                    </>
-                  )}
-                </>
-              )}
-            </>
-          )}
-
-          <div className="navigation-buttons">
-            <button onClick={navigatePrevious} disabled={isFirstLesson}>
-              <ArrowBack /> Previous
-            </button>
-            <button onClick={navigateNext} disabled={isLastLesson}>
-              Next <ArrowForward />
-            </button>
+            <p className="course-description">{course.description}</p>
+            <div className="course-footer">
+              <span className="course-price">{course.pricing}rs</span>
+              <button className="start-learning" onClick={()=>{handleStart(course._id)}}>Start Learning</button>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
+
+      {!showAllCourses && filteredCourses.length > 4 && (
+        <button className="view-all" onClick={handleViewAll}>
+          View All Courses
+        </button>
+      )}
     </div>
   );
 }
 
-export default CourseCatalog ;
+export default CourseCatalog;

@@ -135,11 +135,6 @@ const EditCourse = ({ courseData }) => {
       alert("Price of the course must be non-zero integer.");
       return 0;
     }
-
-    else if(courseDetails.level!="Beginner" || courseDetails.level!="Intermediate" || courseDetails.level!="Advanced"){
-      alert("Chose an appropriate level.");
-      return 0;
-    }
   
     // Prepare data for submission
     const updatedCourseData = {

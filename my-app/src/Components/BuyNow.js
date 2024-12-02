@@ -14,7 +14,7 @@ function BuyNow() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(http://localhost:8000/api/coursedetails/${id});
+        const response = await fetch(`http://localhost:8000/api/coursedetails/${id}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch data");
