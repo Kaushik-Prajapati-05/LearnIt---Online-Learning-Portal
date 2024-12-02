@@ -109,6 +109,7 @@ b. Run the application:
 
 ## Technologies Used
 
+- **UI/UX:** Figma
 - **Frontend:** React
 - **Backend:** Node.js
 - **Database:** MongoDB

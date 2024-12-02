@@ -6,29 +6,35 @@ import {
   faHourglassHalf,
   faClipboardCheck,
   faSignOutAlt,
-   faList,
+  faList,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./Styles/Profile.css";
 import img from "../Assets/profile-img.jpeg";
-
-
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("All Courses");
   const [activeSidebar, setActiveSidebar] = useState("My Courses");
   const [courses, setCourses] = useState([]); // State to store courses
   const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(""); // Error state
+const [error, setError] = useState(""); // Error state
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const token = localStorage.getItem('accessToken');
 
+
+
+
+
+
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
         setError("");
+
 
         // const studentId = localStorage.getItem("studentId"); // Get studentId from localStorage
         const response = await fetch(
@@ -43,11 +49,12 @@ const Profile = () => {
           }
         );
 
+
         const data = await response.json();
        
         console.log(data.data);
         setCourses(data.data || []); // Assuming response structure
-       } catch (err) {
+      } catch (err) {
         console.log(err);
         setError("Failed to load courses. Please try again later.");
       } finally {
@@ -58,9 +65,7 @@ const Profile = () => {
 
     fetchCourses();
   }, []);
-
-
-  const handleTabClick = (tab) => {
+const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
@@ -94,7 +99,7 @@ const Profile = () => {
       <header className="profile-header">
         <nav>
           <p>Profile</p>
-    </nav>
+        </nav>
       </header>
       <div className="profile-content">
         <div className="profile-sidebar">
@@ -102,11 +107,10 @@ const Profile = () => {
             <div className="avatar">
               <img src={img} alt="Profile Avatar" />
             </div>
-            <h2>Kaushik</h2>
+            <h2>{userInfo.userName}</h2>
             <p className="profile-description">
-              Enthusiastic learner and tech enthusiast. Passionate about coding
-              and exploring new technologies.
-            </p>
+              {userInfo.userEmail}
+ </p>
           </div>
           <ul className="sidebar-menu">
             <li
@@ -135,7 +139,7 @@ const Profile = () => {
               <div className="course-summary">
                 <div className="course-card-2">
                   <FontAwesomeIcon icon={faBookOpen} size="2x" />
-           <h3>Enrolled Courses</h3>
+                  <h3>Enrolled Courses</h3>
                   <p>{courses.length}</p>
                 </div>
                 <div className="course-card-2">
@@ -147,7 +151,7 @@ const Profile = () => {
                   </p>
                 </div>
                 <div className="course-card-2">
-                  <FontAwesomeIcon icon={faClipboardCheck} size="2x" />
+<FontAwesomeIcon icon={faClipboardCheck} size="2x" />
                   <h3>Finished Courses</h3>
                   <p>
                     {courses.filter((course) => course.status === "Completed")
@@ -175,7 +179,7 @@ const Profile = () => {
                   <p className="error">{error}</p>
                 ) : filteredCourses().length > 0 ? (
                   filteredCourses().map((course) => (
-                <div className="course-item" key={course.courseId}>
+                    <div className="course-item" key={course.courseId}>
                       <h3>{course.title}</h3>
                       <p>Instructor: {course.instructorName}</p>
                       <p>Purchased on: {new Date(course.dateOfPurchase).toDateString()}</p>
@@ -187,7 +191,7 @@ const Profile = () => {
               </div>
             </>
           )}
-          {activeSidebar === "Quizzes" && (
+{activeSidebar === "Quizzes" && (
             <div className="quizzes-section">
               <h3>Your Quizzes</h3>
               <p>No quizzes available!</p>
