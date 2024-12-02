@@ -1,57 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./Styles/BuyNow.css";
 import { FaLinkedin } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function BuyNow() {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("description"); // Initialize activeTab state
-  const [openSections, setOpenSections] = useState({}); // State to track open sections
-  const token = localStorage.getItem('accessToken');
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
- const handleBuyNow = ()=>{
-  const buy = async () => {
-    try {
-      // const response = await fetch(`http://localhost:8000/student/course/buy`,{},{});
+  const [activeTab, setActiveTab] = useState("description");
+  const [openSections, setOpenSections] = useState({});
 
-      const response = await fetch(
-        `http://localhost:8000/student/course/buy`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            studentId:userInfo._id,
-            courseId:id
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const data = await response.json();
-      console.log(data);
-      navigate('/courses',{state:data.data._id})
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  buy();
-  
- }
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/coursedetails/${id}`);
+        const response = await fetch(http://localhost:8000/api/coursedetails/${id});
 
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -72,7 +35,7 @@ function BuyNow() {
 
   const showTab = (tabId) => setActiveTab(tabId);
   const toggleSections = (chapterId) => {
-    const allSections = document.querySelectorAll(".learnit-section-list");
+    const allSections = document.querySelectorAll(".learnit-section-list-2");
     allSections.forEach((section) => {
       if (section.id !== chapterId) {
         section.style.display = "none";
@@ -84,17 +47,17 @@ function BuyNow() {
   };
 
   return (
-    <div className="learnit-container">
+    <div className="learnit-container-2">
       {/* Header */}
-      <header className="learnit-header">
+      <header className="learnit-header-2">
         <h1>{courses.title}</h1>
       </header>
 
       {/* Main Content */}
-      <div className="learnit-main-content">
+      <div className="learnit-main-content-2">
         {/* Sidebar */}
-        <div className="learnit-sidebar">
-          <div className="learnit-video">
+        <div className="learnit-sidebar-2">
+          <div className="learnit-video-2">
             <iframe
               src={courses.demoVideourl}
               title="YouTube video player"
@@ -102,50 +65,50 @@ function BuyNow() {
               allowFullScreen
             ></iframe>
           </div>
-          <div className="learnit-course-info">
+          <div className="learnit-course-info-2">
             <p>
-              <strong>📅</strong>Published On : {courses.date}
+              <strong>📅</strong> Published On : {courses.date}
             </p>
             <p>
-              <strong>🧑‍🎓</strong> Enrolled Students : {courses.students?.length||0}
+              <strong>🧑‍🎓</strong> Enrolled Students : {courses.students?.length || 0}
             </p>
             <p>
-              <strong>📖</strong> Modules : {courses.curriculum?.length||0}
+              <strong>📖</strong> Modules : {courses.curriculum?.length || 0}
             </p>
             <p>
               <strong>🌐</strong> Language : {courses.primaryLanguage}
             </p>
             <p>
-              <strong>📝</strong>Category : {courses.category}
+              <strong>📝</strong> Category : {courses.category}
             </p>
             <p>
-              <strong>✏️</strong>Level : {courses.level}
+              <strong>✏</strong> Level : {courses.level}
             </p>
 
             <p>
-              <strong>💰</strong>Price : ₹{courses.pricing}
+              <strong>💰</strong> Price : ₹{courses.pricing}
             </p>
           </div>
-          <div onClick={()=>handleBuyNow()} className="learnit-start-button">
+          <a href="/payment" className="learnit-start-button-2">
             Buy Now
-          </div>
+          </a>
         </div>
 
         {/* Content */}
-        <div className="learnit-content">
+        <div className="learnit-content-2">
           {/* Tabs */}
-          <div className="learnit-tabs">
+          <div className="learnit-tabs-2">
             <div
-              className={`learnit-tab ${
-                activeTab === "description" ? "learnit-tab-active" : ""
+              className={`learnit-tab-2 ${
+                activeTab === "description" ? "learnit-tab-active-2" : ""
               }`}
               onClick={() => showTab("description")}
             >
               Description
             </div>
             <div
-              className={`learnit-tab ${
-                activeTab === "instructor" ? "learnit-tab-active" : ""
+              className={`learnit-tab-2 ${
+                activeTab === "instructor" ? "learnit-tab-active-2" : ""
               }`}
               onClick={() => showTab("instructor")}
             >
@@ -155,9 +118,9 @@ function BuyNow() {
 
           {/* Tab Content */}
           {activeTab === "description" && (
-            <div className="learnit-tab-content">
+            <div className="learnit-tab-content-2">
               <p>{courses.description}</p>
-              <div className="learnit-feature-box">
+              <div className="learnit-feature-box-2">
                 <h3>In This Free Course, You Will Learn How To</h3>
                 <ul>
                   <li>{courses.objectives}</li>
@@ -167,12 +130,12 @@ function BuyNow() {
           )}
 
           {activeTab === "instructor" && (
-            <div className="learnit-tab-content">
-              <div className="learnit-instructor-profile">
+            <div className="learnit-tab-content-2">
+              <div className="learnit-instructor-profile-2">
                 <img
                   src={courses.image}
                   alt="Instructor"
-                  className="instructor-image"
+                  className="instructor-image-2"
                   height="100"
                   width="100"
                 />
@@ -188,9 +151,9 @@ function BuyNow() {
                   href={courses.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="linkedin-link"
+                  className="linkedin-link-2"
                 >
-                  <FaLinkedin size={30} className="linkedin-icon" />
+                  <FaLinkedin size={30} className="linkedin-icon-2" />
                 </a>
               </div>
             </div>
