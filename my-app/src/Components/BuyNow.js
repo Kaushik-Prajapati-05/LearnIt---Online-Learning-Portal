@@ -1,16 +1,53 @@
 import React, { useState, useEffect } from "react";
 import "./Styles/BuyNow.css";
 import { FaLinkedin } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function BuyNow() {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("description"); // Initialize activeTab state
   const [openSections, setOpenSections] = useState({}); // State to track open sections
+  const token = localStorage.getItem('accessToken');
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+ const handleBuyNow = ()=>{
+  const buy = async () => {
+    try {
+      // const response = await fetch(`http://localhost:8000/student/course/buy`,{},{});
 
+      const response = await fetch(
+        `http://localhost:8000/student/course/buy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            studentId:userInfo._id,
+            courseId:id
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      console.log(data);
+      navigate('/courses',{state:data.data._id})
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  buy();
+  
+ }
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -89,9 +126,9 @@ function BuyNow() {
               <strong>💰</strong>Price : ₹{courses.pricing}
             </p>
           </div>
-          <a href="/payment" className="learnit-start-button">
+          <div onClick={()=>handleBuyNow()} className="learnit-start-button">
             Buy Now
-          </a>
+          </div>
         </div>
 
         {/* Content */}
