@@ -12,7 +12,7 @@ function HeroSection() {
             Professional & Lifelong Learning
           </Typography>
           <Typography variant="h2" className="hero-title">
-            Online Courses With Certificates
+          Learn Your Way: Online or Offline, Anytime, Anywhere!!
           </Typography>
         </Box>
         <Box className="hero-image">

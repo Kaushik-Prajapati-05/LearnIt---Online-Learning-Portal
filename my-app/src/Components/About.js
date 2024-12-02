@@ -21,10 +21,7 @@ const About = () => {
             <h3>500k+</h3>
             <p>Students Enrolled</p>
           </div>
-          <div className="stat">
-            <h3>95%</h3>
-            <p>Success Rate</p>
-          </div>
+       
         </div>
       </div>
     </section>
