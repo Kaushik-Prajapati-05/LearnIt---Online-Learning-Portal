@@ -8,14 +8,12 @@ function StartLearning() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("description"); // Initialize activeTab state
-  const [openSections, setOpenSections] = useState({}); // State to track open sections
+  const [activeTab, setActiveTab] = useState("description");
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/coursedetails/${id}`);
-
+        const response = await fetch(http://localhost:8000/api/coursedetails/${id});
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -34,84 +32,58 @@ function StartLearning() {
   }, [id]);
 
   const showTab = (tabId) => setActiveTab(tabId);
-  const toggleSections = (chapterId) => {
-    const allSections = document.querySelectorAll(".course-section-list");
-    allSections.forEach((section) => {
-      if (section.id !== chapterId) {
-        section.style.display = "none";
-      }
-    });
-    const sectionList = document.getElementById(chapterId);
-    sectionList.style.display =
-      sectionList.style.display === "none" ? "block" : "none";
-  };
 
   return (
-    <div className="course-container">
+    <div className="course-container-2">
       {/* Header */}
-      <header className="course-header">
-        <h1>{courses.title}</h1>
-      </header>
+      <div className="course-header-2">
+        <h1>{courses.title || "Course Title"}</h1>
+      </div>
 
       {/* Main Content */}
-      <div className="course-main-content">
+      <div className="course-main-content-2">
         {/* Sidebar */}
-        <div className="course-sidebar">
-          <div className="course-video">
+        <div className="course-sidebar-2">
+          <div className="course-video-2">
             <iframe
               src={courses.demoVideourl}
-              title="YouTube video player"
+              title="Course Demo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>
-          <div className="course-course-info">
-          <p>
-              <strong>📅</strong>Published On : {courses.date}
-            </p>
-            <p><strong>🧑‍🎓</strong> Enrolled Students : {courses.students?.length||0}</p>
-            <p><strong>📖</strong> Modules : {courses.curriculum?.length||0}</p>
-            <p><strong>🌐</strong> Language : {courses.primaryLanguage}</p>
-            <p>
-              <strong>📝</strong>Category : {courses.category}
-            </p>
-            <p>
-              <strong>✏️</strong>Level : {courses.level}
-            </p>
-
-            <p>
-              <strong>💰</strong>Price : ₹{courses.pricing}
-            </p>
+          <div className="course-course-info-2">
+            <p><strong>📅 Published On:</strong> {courses.date || "N/A"}</p>
+            <p><strong>🧑‍🎓 Enrolled Students:</strong> {courses.students?.length || 0}</p>
+            <p><strong>📖 Modules:</strong> {courses.curriculum?.length || 0}</p>
+            <p><strong>🌐 Language:</strong> {courses.primaryLanguage || "N/A"}</p>
+            <p><strong>📝 Category:</strong> {courses.category || "N/A"}</p>
+            <p><strong>✏ Level:</strong> {courses.level || "N/A"}</p>
+            <p><strong>💰 Price:</strong> ₹{courses.pricing || "N/A"}</p>
           </div>
-          <a href="/startlearning" className="course-start-button">
+          <a href="/startlearning" className="course-start-button-2">
             Start Learning
           </a>
         </div>
 
-        {/* Content */}
-        <div className="course-content">
+        {/* Main Content Area */}
+        <div className="course-content-2">
           {/* Tabs */}
-          <div className="course-tabs">
+          <div className="course-tabs-2">
             <div
-              className={`course-tab ${
-                activeTab === "description" ? "course-tab-active" : ""
-              }`}
+              className={course-tab-2 ${activeTab === "description" ? "course-tab-active-2" : ""}}
               onClick={() => showTab("description")}
             >
               Description
             </div>
             <div
-              className={`course-tab ${
-                activeTab === "curriculum" ? "course-tab-active" : ""
-              }`}
+              className={course-tab-2 ${activeTab === "curriculum" ? "course-tab-active-2" : ""}}
               onClick={() => showTab("curriculum")}
             >
               Curriculum
             </div>
             <div
-              className={`course-tab ${
-                activeTab === "instructor" ? "course-tab-active" : ""
-              }`}
+              className={course-tab-2 ${activeTab === "instructor" ? "course-tab-active-2" : ""}}
               onClick={() => showTab("instructor")}
             >
               Instructor
@@ -120,67 +92,58 @@ function StartLearning() {
 
           {/* Tab Content */}
           {activeTab === "description" && (
-            <div className="course-tab-content">
-              <p>{courses.description}</p>
-              <div className="course-feature-box">
-                <h3>In This Free Course, You Will Learn How To</h3>
+            <div className="course-tab-content-2">
+              <p>{courses.description || "No description available."}</p>
+              <div className="course-feature-box-2">
+                <h3>In This Course, You Will Learn:</h3>
                 <ul>
-                  
-                  <li>{courses.objectives}</li>
+                  <li>{courses.objectives || "No objectives provided."}</li>
                 </ul>
               </div>
-              
-            
             </div>
           )}
 
           {activeTab === "curriculum" && (
-  <div className="course-tab-content">
-    {courses.curriculum && courses.curriculum.length > 0 ? (
-      courses.curriculum.map((module, index) => (
-        <div className="course-chapter-box" key={index}>
-          <h3 onClick={() => toggleSections(`chapter${index + 1}`)}>
-            📍 {module.moduleName}
-          </h3>
-          <div className="course-section-list" id={`chapter${index + 1}`}>
-            {module.moduleContentUrl && module.moduleSections && module.moduleSections.map((section, idx) => (
-              <p key={idx}><a href={module.moduleContentUrl}>🧾 {section}</a></p>
-            ))}
-          </div>
-        </div>
-      ))
-    ) : (
-      <p>No curriculum available.</p>
-    )}
-  </div>
-)}
-
+            <div className="course-tab-content-2">
+              {courses.curriculum && courses.curriculum.length > 0 ? (
+                courses.curriculum.map((module, index) => (
+                  <div className="course-chapter-box-2" key={index}>
+                    <h3>📍 {module.moduleName}</h3>
+                    <div className="course-section-list-2">
+                      {module.moduleSections && module.moduleSections.map((section, idx) => (
+                        <p key={idx}>
+                          <a href={module.moduleContentUrl || "#"}>🧾 {section}</a>
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No curriculum available.</p>
+              )}
+            </div>
+          )}
 
           {activeTab === "instructor" && (
-            <div className="course-tab-content">
-              <div className="course-instructor-profile">
+            <div className="course-tab-content-2">
+              <div className="course-instructor-profile-2">
                 <img
                   src={courses.image}
                   alt="Instructor"
-                  className="instructor-image"
-                  height="100"
-                  width="100"
+                  className="instructor-image-2"
                 />
-                <p>
-                  <strong>{courses.instructorName}</strong>
-                </p>
-                <p>👉 Expert in {courses.expertise}</p>
-                <p>👉 Students taught: {courses.taughtStudents}+</p>
-                <p>👉 Total courses offered: {courses.offeredCourses}</p>
-                <p>👉 Rating: {courses.rating}</p>
-
+                <p><strong>{courses.instructorName || "Instructor Name"}</strong></p>
+                <p>👉 Expert in {courses.expertise || "N/A"}</p>
+                <p>👉 Students Taught: {courses.taughtStudents || 0}+</p>
+                <p>👉 Courses Offered: {courses.offeredCourses || 0}</p>
+                <p>👉 Rating: {courses.rating || "N/A"}</p>
                 <a
-                  href={courses.linkedinUrl}
+                  href={courses.linkedinUrl || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="linkedin-link"
+                  className="linkedin-link-2"
                 >
-                  <FaLinkedin size={30} className="linkedin-icon" />
+                  <FaLinkedin size={30} />
                 </a>
               </div>
             </div>
