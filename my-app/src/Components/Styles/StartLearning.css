@@ -1,94 +1,109 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 /* General Styling */
-body, .course-container {
+body {
+  height: 100%; /* Make sure the HTML and body take full height */
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
   background-color: #2d3a6a;
   color: #f4f4f4;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Make sure the body takes the full width */
 }
 
 /* Header */
-.course-header {
-  font-family: 'Poppins';
-  background: #000f41;
-  color:#ff6600;
+.course-header-2 {
+  background-color: #1e2a47;
+  color: #ff6600;
   text-align: center;
   padding: 20px;
+  border-bottom: 3px solid #ff6600;
 }
 
-.course-header h1 {
-  font-size: 3rem;
-  font-weight: 70;
+.course-header-2 h1 {
   margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
-/* Main Content Layout */
-.course-main-content {
+/* Layout */
+.course-container-2 {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  padding: 10px;
+  min-height: 100vh; /* Ensure container takes at least full viewport height */
+  width: 100%; /* Ensure the container takes the full width */
+  box-sizing: border-box; /* Make sure padding doesn't affect width */
+}
+
+/* Main Content */
+.course-main-content-2 {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Sidebar and content */
   gap: 20px;
-  padding: 20px;
+  margin-top: 20px;
+  flex: 1; /* Make sure content area grows to fill available space */
+  min-width: 800;
 }
 
 /* Sidebar */
-.course-sidebar {
-  flex: 0 0 230px;
-  background-color: #000f41;
+.course-sidebar-2 {
+  background-color: #1e2a47;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 100%; /* Ensure sidebar takes full width */
 }
 
-.course-video iframe {
+.course-video-2 iframe {
   width: 100%;
-  height: 250px;
+  height: 200px;
   border: none;
   border-radius: 10px;
 }
 
-.course-sidebar p {
+.course-course-info-2 p {
   margin: 10px 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  width: 100%;
 }
 
-.course-start-button {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
+.course-start-button-2 {
+  display: block;
+  margin-top: 15px;
+  padding: 12px 20px;
   background-color: #ff6600;
   color: #fff;
   border-radius: 5px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
   text-align: center;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 }
 
-.course-start-button:hover {
-  background-color: #ff6600;
+.course-start-button-2:hover {
+  background-color: #e05c00;
 }
 
-/* Main Content Section */
-.course-content {
-  flex: 3;
-  background-color: #000f41;
+/* Main Content */
+.course-content-2 {
+  background-color: #1e2a47;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 100%; /* Ensure content area takes full width */
 }
 
 /* Tabs */
-.course-tabs {
+.course-tabs-2 {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-bottom: 20px;
   border-bottom: 2px solid #333;
 }
 
-.course-tab {
+.course-tab-2 {
   padding: 10px 15px;
   cursor: pointer;
   font-weight: 600;
@@ -97,85 +112,77 @@ body, .course-container {
   transition: all 0.3s;
 }
 
-.course-tab-active {
+.course-tab-active-2 {
   background-color: #ff6600;
   color: #fff;
 }
 
-.course-tab:hover {
+.course-tab-2:hover {
   background-color: #1e2a47;
   color: #ff6600;
 }
 
 /* Tab Content */
-.course-tab-content {
+.course-tab-content-2 {
+  margin-top: 15px;
+  width: 100%; /* Ensure tab content takes full width */
+}
+
+.course-feature-box-2 {
+  background-color: #2d3a6a;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  width: 100%; /* Ensure feature box takes full width */
+}
+
+.course-feature-box-2 h3 {
+  margin-bottom: 10px;
+  color: #ff6600;
+}
+
+.course-section-list-2 p {
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  background-color: #2d3a6a;
+  transition: all 0.3s;
+}
+
+.course-section-list-2 p:hover {
+  background-color: #ff6600;
+  color: #fff;
+  transform: scale(1.03);
+}
+
+/* Instructor Section */
+.course-instructor-profile-2 {
+  text-align: left;
   margin-top: 20px;
 }
 
-.course-feature-box {
-  background-color: #2d3a6a;
-  border-radius: 5px;
-  padding: 15px;
-  margin-top: 10px;
-}
-
-.course-feature-box h3 {
-  margin-bottom: 10px;
-}
-
-.course-feature-box ul {
-  list-style-type: disc;
-  margin-left: 20px;
-}
-
-/* Curriculum Section */
-.course-chapter-box {
+.instructor-image-2 {
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
   margin-bottom: 15px;
 }
 
-.course-chapter-box h3 {
-  font-size: 1.2rem;
-  cursor: pointer;
-  margin-bottom: 5px;
-  color: #ff6600;
-  transition: all 0.3s;
-}
-
-
-.course-section-list p {
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px 0;
-    background-color: #2d3a6a; /* Default background */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .course-section-list p:hover {
-    background-color: #ff6600; /* Highlight color */
-    color: white; /* Text color when hovered */
-    transform: scale(1); /* Slightly increase size */
-  }
-
-.course-instructor-profile {
-    text-align: left;
-    margin-top: 20px;
-}
-
-.instructor-image {
-    width: 200px;
-    height: 120px;
-    margin-bottom: 15px;
-}
-
-.linkedin-link {
+.linkedin-link-2 {
   text-decoration: none;
-  color: #2d3a6a;
+  color: #ff6600;
+  font-weight: 600;
+  transition: color 0.3s;
 }
 
-.linkedin-icon {
-  transition: all 0.3s;
+.linkedin-link-2:hover {
+  color: #e05c00;
 }
 
-.linkedin-icon:hover {
-  color: #fff;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-main-content-2 {
+    grid-template-columns: 1fr; /* Stack columns vertically */
+  }
 }
