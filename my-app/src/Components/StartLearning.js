@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Styles/StartLearning.css";
 import { FaLinkedin } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function StartLearning() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ function StartLearning() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -31,6 +31,10 @@ function StartLearning() {
     }
   }, [id]);
 
+
+  const handleStart = ()=>{
+    navigate(`/learnCourse/${id}`)
+  }
   const showTab = (tabId) => setActiveTab(tabId);
 
   return (
@@ -61,9 +65,9 @@ function StartLearning() {
             <p><strong>✏ Level:</strong> {courses.level || "N/A"}</p>
             <p><strong>💰 Price:</strong> ₹{courses.pricing || "N/A"}</p>
           </div>
-          <a href="/startlearning" className="course-start-button-2">
+          <div onClick={()=>handleStart()} className="course-start-button-2">
             Start Learning
-          </a>
+          </div>
         </div>
 
         {/* Main Content Area */}

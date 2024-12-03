@@ -5,7 +5,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "dx5gwfetc",  // Use environment variables for sensitive data
   api_key: process.env.CLOUDINARY_API_KEY || "575799595654388",
   api_secret: process.env.CLOUDINARY_API_SECRET || "AiaeeqA62Ir-lw5VyFbPGIwSyss",
-});
+}); 
 
 // Function to upload a file to Cloudinary
 const uploadMediaToCloudinary = async (filePath) => {
