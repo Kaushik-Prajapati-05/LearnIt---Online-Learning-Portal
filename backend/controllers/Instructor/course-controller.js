@@ -1,4 +1,5 @@
 const Course = require("../../models/Course");
+const User = require("../../models/User");
 
 const addNewCourse = async (req, res) => {
   try {
@@ -24,6 +25,46 @@ const addNewCourse = async (req, res) => {
     });
   }
 };
+
+const getCourseById = async (req, res) => {
+  try {
+    const { instructorId } = req.params; 
+    console.log(instructorId);
+
+    // Validate the instructorId
+    if (!instructorId) {
+      return res.status(400).json({
+        success: false,
+        message: "Instructor ID is required!",
+      });
+    }
+
+    // Check if the user with the given instructorId exists and has the role 'instructor'
+    const instructor = await User.findOne({ _id: instructorId, role: "Instructor" });
+
+    if (!instructor) {
+      return res.status(404).json({
+        success: false,
+        message: "Instructor not found or does not have the role 'instructor'!",
+      });
+    }
+
+    // Fetch all courses associated with this instructor
+    const courses = await Course.find({ instructorId });
+console.log(courses);
+    res.status(200).json({
+      success: true,
+      data: courses,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving courses!",
+    });
+  }
+};
+
 
 const getAllCourses = async (req, res) => {
   try {
@@ -104,4 +145,5 @@ module.exports = {
   getAllCourses,
   updateCourseByID,
   getCourseDetailsByID,
+  getCourseById
 };
