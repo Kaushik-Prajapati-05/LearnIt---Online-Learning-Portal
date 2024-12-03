@@ -1,5 +1,5 @@
-const Course = require("../../models/Course");
 
+const Course = require("../../models/Course");
 
 // const getAllStudentViewCourses = async (req, res) => {
 //   try {
@@ -61,34 +61,67 @@ const Course = require("../../models/Course");
 //     });
 //   }
 // };
+class getCourseDetails {
+  static getStudentViewCourseDetails = async (req, res) => {
+   
+   console.log("getCourseData")
+    try {
 
-class getCourseDetails
-{static getStudentViewCourseDetails = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const courseDetails = await Course.findById(id);
 
-    if (!courseDetails) {
-       res.status(404).json({
+      const { id } = req.params;
+
+      const courseDetails = await Course.findById(id);
+
+      if (!courseDetails) {
+        return res.status(404).json({
+          success: false,
+          message: "Course not found!",
+        });
+      }
+
+      // Transform data to the desired format
+      const formattedData = courseDetails.curriculum.map((module) => {
+        let link = null;
+        let type = 'quiz'; // default type
         
-        success: false,
-        message: "Course not found!",
-        
+        if (module.moduleType === 'lecture') {
+          if (module.moduleVideoUrl) {
+            type = 'video';
+            link = module.moduleVideoUrl; // Assign video URL to link
+          } else if (module.moduleContentUrl.length > 0) {
+            type = 'pdf';
+            link = module.moduleContentUrl[0]; // Assign PDF URL to link
+          }
+        }
+         
+        return {
+          title: module.moduleName,
+          items: [
+            {
+              title: module.moduleName,  // Lesson title is the same as moduleName
+              type: type,               // video, pdf, or quiz
+              time: "60 minutes",       // Placeholder for time, adjust as needed
+              link: link                // The link to the content (video or PDF)
+            }
+          ]
+        }; 
       });
-      return;
+
+      const data = {
+        module: formattedData,
+        others: courseDetails
+      };
+
+      res.json(data);
+
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({
+        success: false,
+        message: "Some error occurred!",
+      });
     }
-
-    res.json(courseDetails);
-
-  } catch (e) {
-    console.log(e);
-    // res.status(500).json({
-    //   success: false,
-    //   message: "Some error occured!",
-    // });
-  }
-}}
-
+  };
+}
 
 module.exports = getCourseDetails;
-  
