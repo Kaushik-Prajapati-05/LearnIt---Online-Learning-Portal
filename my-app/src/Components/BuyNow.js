@@ -1,16 +1,58 @@
 import React, { useState, useEffect } from "react";
 import "./Styles/BuyNow.css";
 import { FaLinkedin } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 
 function BuyNow() {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("description");
   const [openSections, setOpenSections] = useState({});
-
+  const token = localStorage.getItem('accessToken');
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const handleBuyNow = ()=>{
+    const buy = async () => {
+      try {
+        // const response = await fetch(`http://localhost:8000/student/course/buy`,{},{});
+  
+        const response = await fetch(
+          `http://localhost:8000/student/course/buy`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              studentId:userInfo._id,
+              courseId:id
+            }),
+          }
+        );
+         
+        const data = await response.json();
+        if (!response.ok) {
+          alert(data.message)
+          throw new Error("Failed to fetch data");
+        }
+        
+    
+        console.log(data);
+        navigate(`/start-learning/${id}`)
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        console.log(error.message)
+        setLoading(false);
+      }
+    };
+  
+    buy();
+    
+   }
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -89,9 +131,12 @@ function BuyNow() {
               <strong>💰</strong> Price : ₹{courses.pricing}
             </p>
           </div>
-          <a href="/payment" className="learnit-start-button-2">
+          {/* <a href="/payment" className="learnit-start-button-2">
             Buy Now
-          </a>
+          </a> */}
+          <div onClick={()=>handleBuyNow()} className="learnit-start-button-2">
+            Buy Now
+          </div>
         </div>
 
         {/* Content */}
