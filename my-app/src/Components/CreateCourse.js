@@ -31,6 +31,9 @@ const CreateCourse = () => {
     courseImage: null,
     isPublished: false, // Added default for isPublished
   });
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
   const [modules, setModules] = useState([]);
 
   const navigate = useNavigate();
@@ -156,8 +159,8 @@ const CreateCourse = () => {
     }
 
     const courseData = {
-      instructorId: 'InstructorID', // Example: dynamically set based on logged-in user
-      instructorName: 'Instructor Name', // Example: dynamically set based on logged-in user
+      instructorId: userInfo._id, // Example: dynamically set based on logged-in user
+      instructorName: userInfo.userName, // Example: dynamically set based on logged-in user
       title: courseDetails.title,
       category: courseDetails.category,
       level: courseDetails.level,

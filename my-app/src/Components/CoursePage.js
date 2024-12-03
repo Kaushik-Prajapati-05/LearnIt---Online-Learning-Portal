@@ -22,12 +22,67 @@ function CoursePage() {
   const [showInstructions, setShowInstructions] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
 
+  const [video,setVideo] = useState(""); 
   const [courseDetails, setCourseDetails] = useState([]); // Holds the course details fetched from the API
-  const [modules1, setModules] = useState([]); // Stores the course curriculum (modules)
+  const [modules, setModules] = useState([
+    {
+      title: "LearnPress Getting Started",
+      items: [
+        { title: "What is LearnPress?", type: "video", time: "20 minutes" },
+        { title: "How to use LearnPress?", type: "video", time: "60 minutes" },
+        {
+          title: "Demo the Quiz of LearnPress",
+          type: "quiz",
+          time: "10 minutes",
+          quiz: {
+            passingMarks: 2,
+            questions: [
+              {
+                question: "What is the primary purpose of LearnPress?",
+                options: [
+                  "Online Learning",
+                  "Cooking",
+                  "Shopping",
+                  "Traveling",
+                ],
+                correctAnswer: 0,
+              },
+              {
+                question: "What language is LearnPress built on?",
+                options: ["JavaScript", "Python", "PHP", "Ruby"],
+                correctAnswer: 2,
+              },
+              {
+                question: "Who is LearnPress designed for?",
+                options: [
+                  "Bloggers",
+                  "Educators",
+                  "Gamers",
+                  "Content Creators",
+                ],
+                correctAnswer: 1,
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      title: "LearnPress Live Course",
+      items: [
+        {
+          title: "Demo Zoom Meeting Lesson",
+          type: "video",
+          time: "60 minutes",
+        },
+        { title: "Demo Google Meet Lesson", type: "video", time: "60 minutes" },
+      ],
+    },
+  ]); // Stores the course curriculum (modules)
   const [loading, setLoading] = useState(true); // Indicates if data is being loaded
   const [error, setError] = useState(null); // Stores any error message during API fetching
 
-  const modules = [
+  const modules1 = [
     {
       title: "LearnPress Getting Started",
       items: [
@@ -92,9 +147,12 @@ function CoursePage() {
         const data = await response.json();
         console.log(data);
         setCourseDetails(data);
-        setModules(data.curriculum || []);
+        setModules(data.module || []);
+        setVideo(data.module[0].items[0].link)
+        // setVideo(data.curriculum[1].moduleVideoUrl)
         // console.log(data.curriculum || [])
       } catch (err) {
+        console.log(err)
         setError(err.message);
       } finally {
         setLoading(false);
@@ -104,7 +162,8 @@ function CoursePage() {
     fetchCourseDetails();
   }, [id]);
 
-  console.log(modules1);
+  console.log(modules[0].items[0].link);
+  
   const totalLessons = modules.reduce(
     (acc, module) => acc + module.items.length,
     0
@@ -290,10 +349,12 @@ function CoursePage() {
             <>
               <p>{`${currentLesson.title} content description...`}</p>
               <video controls className="module-video">
-                <source src="your-video-url.mp4" type="video/mp4" />
+                <source src={video} altr="adasd" type="video/mp4" />
               </video>
               <button className="complete-button" onClick={markAsComplete}>
-                Mark as Complete
+                {/* Mark as complete */}
+                {video}
+                {/* {modules1[1].items.length ? modules1[1].items.link :"LLL" } */}
               </button>
             </>
           )}
