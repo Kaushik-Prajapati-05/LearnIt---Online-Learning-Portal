@@ -8,6 +8,7 @@ const buyNow = async (req, res) => {
   try {
     const { courseId, studentId, paidAmount } = req.body;
 
+    console.log(req.body);
     // Validate input
     if (!courseId || !studentId) {
       return res.status(400).json({

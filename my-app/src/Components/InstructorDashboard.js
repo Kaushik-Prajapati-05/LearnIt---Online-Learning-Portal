@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaEdit, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import "./Styles/InstructorDashboard.css";
@@ -22,6 +22,7 @@ const initialQuizzesData = [
 ];
 
 const InstructorDashboard = () => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
   const [activeTab, setActiveTab] = useState('courses'); // Default to 'courses'
   const [coursesData, setCoursesData] = useState([]); // Managing courses state
   const [quizzesData, setQuizzesData] = useState(initialQuizzesData); // Managing quizzes state
@@ -30,8 +31,9 @@ const InstructorDashboard = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/instructor/course/get");
-        setCoursesData(response.data.data); // Set courses data
+        console.log(userInfo  )
+        const response = await axios.get(`http://localhost:8000/instructor/course/getbyid/${userInfo._id}`);
+        setCoursesData(response.data.data); 
       } catch (error) {
         console.error("Error fetching courses:", error);
       }

@@ -29,7 +29,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/learnCourse" element={<CoursePage />} />
+        <Route path="/learnCourse/:id" element={<CoursePage />} />
         <Route path="/instructor-dashboard" element={<InstructorDashboardPage />} />
          <Route path="/create-course" element={
           <> <Header />

@@ -1,23 +1,79 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom"; 
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons
 import "./Styles/EditProfile.css";
 import img from "../Assets/profile-img.jpeg";
 
 const EditProfile = () => {
-  const [username, setUsername] = useState("Kaushik");
+  
+  const [username, setUsername] = useState("");
   const [description, setDescription] = useState("Enthusiastic learner and tech enthusiast. Passionate about coding and exploring new technologies.");
-  const [password, setPassword] = useState("12345678");
-  const [confirmPassword, setConfirmPassword] = useState("12345678");
-  const [email, setEmail] = useState("abc@gmail.com");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [profileImage, setProfileImage] = useState(img);
   const [error, setError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // State for confirm password visibility
   const navigate = useNavigate(); 
+  const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+  const handleSave = async () => {
+    if (!validateEmail(email)) {
+      setError("Invalid email format. Email should contain '@' with characters before and after.");
+      return;
+    }
+  
+    if (!validatePassword(password)) {
+      setError("Password must contain a capital letter, a small letter, a number, a special character, and be 8-12 characters long.");
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
 
+      return;
+    }
+  
+    setError(""); // Clear any previous errors
+    console.log(username)
+    const userData = {
+      userName: username,
+      userEmail: email,
+      password: password // Adjust based on your application needs
+    };
+  
+    try {
+      console.log(userinfo)
+      const response = await fetch(`http://localhost:8000/auth/update/${userinfo._id}`, {
+        method: "POST", // POST request
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      const result = await response.json();
+      console.log(result)
+
+      localStorage.setItem("userInfo",JSON.stringify(result.user))
+      localStorage.setItem("accessToken",JSON.stringify(result.accessToken))
+  
+      if (response.ok) {
+        alert("Profile updated successfully!");
+        navigate("/profile"); // Navigate to the profile page
+      
+      } else {
+        setError(result.message || "Failed to update profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error while updating profile:", error);
+      setError("An error occurred while updating the profile. Please try again.");
+    }
+  };
+  
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     return emailRegex.test(email);
   };
 
@@ -28,6 +84,7 @@ const EditProfile = () => {
 
   const handleNameChange = (e) => {
     setUsername(e.target.value);
+   
   };
 
   const handleEmailChange = (e) => {
@@ -57,31 +114,7 @@ const EditProfile = () => {
     }
   };
 
-  const handleSave = () => {
-    // Email validation
-    if (!validateEmail(email)) {
-      setError("Invalid email format. Email should contain '@' with characters before and after.");
-      return;
-    }
-
-    // Password validation
-    if (!validatePassword(password)) {
-      setError("Password must contain a capital letter, a small letter, a number, a special character, and be 8-12 characters long.");
-      return;
-    }
-
-    // Confirm password validation
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    setError("");
-    alert("Profile updated successfully!");
-
-    // Navigate to the profile page after successful save
-    navigate("/profile");
-  };
+  
 
   return (
     <div className="container">
