@@ -81,10 +81,11 @@
 .course-title {
   display: block;
   text-align:left;
-  font-size: 1.3rem;
+  font-size: 1.7rem;
   font-weight: bold;
   color: #000e3dfb;
   margin: 15px;
+  font-size: 19px;
 }
 
 .course-description {

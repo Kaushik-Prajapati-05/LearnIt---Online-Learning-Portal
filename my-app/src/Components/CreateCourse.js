@@ -100,6 +100,8 @@ const CreateCourse = () => {
       if (response.ok) { // Check that url exists in the response
         console.log('Course image uploaded successfully:', result.data);
         setCourseDetails({ ...courseDetails, image: result.data });
+        console.log(courseDetails.image);
+
       } else {
         console.error('Failed to upload course image:', result.message);
       }
