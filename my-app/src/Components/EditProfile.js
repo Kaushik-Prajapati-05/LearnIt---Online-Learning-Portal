@@ -5,18 +5,18 @@ import "./Styles/EditProfile.css";
 import img from "../Assets/profile-img.jpeg";
 
 const EditProfile = () => {
-  
-  const [username, setUsername] = useState("");
+  const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+  const [username, setUsername] = useState(userinfo.userName);
   const [description, setDescription] = useState("Enthusiastic learner and tech enthusiast. Passionate about coding and exploring new technologies.");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(userinfo.userEmail);
   const [profileImage, setProfileImage] = useState(img);
   const [error, setError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // State for confirm password visibility
   const navigate = useNavigate(); 
-  const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+  
   const handleSave = async () => {
     if (!validateEmail(email)) {
       setError("Invalid email format. Email should contain '@' with characters before and after.");
