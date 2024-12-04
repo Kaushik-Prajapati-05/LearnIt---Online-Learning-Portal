@@ -42,6 +42,7 @@ function BuyNow() {
         }
 
         console.log(data);
+       
         navigate(`/start-learning/${id}`);
         setLoading(false);
       } catch (error) {

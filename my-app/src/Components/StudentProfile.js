@@ -167,7 +167,7 @@ const Profile = () => {
                       <div
                         key={course.courseId}
                         className="course-card"
-                        onClick={() => navigate(`/start-learning/${course._id}`)}
+                        onClick={() => navigate(`/start-learning/${course.courseId}`)}
                       >
                         <img
                           src={course.courseImage}

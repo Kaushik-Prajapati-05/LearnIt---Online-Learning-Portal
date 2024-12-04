@@ -69,9 +69,11 @@ class getCourseDetails {
 
 
       const { id } = req.params;
+      // console.log(id);
 
       const courseDetails = await Course.findById(id);
 
+      // console.log(courseDetails);
       if (!courseDetails) {
         return res.status(404).json({
           success: false,
