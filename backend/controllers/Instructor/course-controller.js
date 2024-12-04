@@ -2,29 +2,39 @@ const Course = require("../../models/Course");
 const User = require("../../models/User");
 
 const addNewCourse = async (req, res) => {
+  console.log("addNewCourse")
   try {
     const courseData = req.body;
-    
-    console.log(req.body)
-    const newlyCreatedCourse = new Course(courseData);
-    const saveCourse = await newlyCreatedCourse.save();
- 
-    if (saveCourse) {
-      res.status(201).json({
-        success: true,
-        message: "Course saved successfully",
-        data: saveCourse,
-        
+    // console.log(courseData)
+
+    // Check if a course with the same title already exists
+    const existingCourse = await Course.findOne({ title: courseData.title });
+
+    if (existingCourse) {
+      return res.status(400).json({
+        success: false,
+        message: "A course with this title already exists. Please choose a different title.",
       });
     }
+
+    // Create and save the new course 
+    const newlyCreatedCourse = new Course(courseData);
+    const saveCourse = await newlyCreatedCourse.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Course saved successfully",
+      data: saveCourse,
+    });
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };
+
 
 const getCourseById = async (req, res) => {
   try {

@@ -33,6 +33,7 @@ const listCourses = async (req, res) => {
     }
 
 
+    console.log(studentCourses);  
     res.status(200).json({
       success: true,
       message: 'Courses retrieved successfully',

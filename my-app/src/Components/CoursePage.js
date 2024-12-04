@@ -7,6 +7,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { IconButton } from "@mui/material";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useNavigate, useParams } from "react-router-dom";
+import Header2 from "./HeaderAfterSignIn";
 
 function CoursePage() {
   const { id } = useParams();
@@ -24,7 +25,7 @@ function CoursePage() {
 
   const [video,setVideo] = useState(""); 
   const [courseDetails, setCourseDetails] = useState([]); // Holds the course details fetched from the API
-  const [modules, setModules] = useState([
+  const [modules1, setModules] = useState([
     {
       title: "LearnPress Getting Started",
       items: [
@@ -82,7 +83,7 @@ function CoursePage() {
   const [loading, setLoading] = useState(true); // Indicates if data is being loaded
   const [error, setError] = useState(null); // Stores any error message during API fetching
 
-  const modules1 = [
+  const modules = [
     {
       title: "LearnPress Getting Started",
       items: [
@@ -267,6 +268,7 @@ function CoursePage() {
     );
   };
   return (
+    <><Header2/>
     <div className="course-page">
       <div className="course-header">
         <div className="back-button" onClick={() => window.history.back()}>
@@ -474,7 +476,7 @@ function CoursePage() {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 }
 export default CoursePage;

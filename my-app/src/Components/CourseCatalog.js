@@ -73,24 +73,14 @@ function CourseCatalog() {
           <div key={course._id} className="course-card">
             <img src={course.image} alt={course.title} className="course-image" />
             <div className="course-category">{course.category}</div>
-            <h3 className="course-title">{course.title}</h3>
+            <h1 className="course-title">{course.title}</h1>
               <div className="course-info">
               <span className="course-stats">
                 <Person className="icon" />
-                <span>{course.students.length} Students</span> { /* need to change */ }
+                <h5>{course.students.length} Students</h5> { /* need to change */ }
               </span> 
-              <Divider
-                orientation="vertical"
-                sx={{
-                  height: '18px',
-                  borderRight: '2px solid #888',
-                  margin: '0 12px',
-                }}
-              />
-              <span className="course-stats">
-                <AccessTime className="icon" />
-                <span>{course.duration}</span>
-              </span>
+              
+              
             </div>
             <p className="course-description">{course.description}</p>
             <div className="course-footer">

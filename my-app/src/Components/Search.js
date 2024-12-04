@@ -32,23 +32,6 @@ function Search() {
     "Others",
   ];
 
-  // const courses = [
-  //   { title: "Photography Mastery", price: 50, dateAdded: "2024-01-01", popularity: 5, category: "Photography" },
-  //   { title: "Advanced IT Skills", price: 20, dateAdded: "2024-02-01", popularity: 8, category: "IT" },
-  //   { title: "Web Development Bootcamp", price: 100, dateAdded: "2024-03-01", popularity: 10, category: "Developer" },
-  //   { title: "Marketing for Professionals", price: 75, dateAdded: "2024-01-15", popularity: 12, category: "Marketing" },
-  //   { title: "Health & Wellness 101", price: 30, dateAdded: "2024-04-01", popularity: 7, category: "Health" },
-  //   { title: "Teach Online Like a Pro", price: 120, dateAdded: "2024-02-15", popularity: 3, category: "Teaching Online" },
-  //   { title: "Tech Innovations 2024", price: 200, dateAdded: "2024-03-15", popularity: 15, category: "Technology" },
-  //   { title: "Business Fundamentals", price: 90, dateAdded: "2024-01-10", popularity: 18, category: "Business" },
-  //   { title: "Creative Design Techniques", price: 45, dateAdded: "2024-05-01", popularity: 9, category: "Design" },
-  //   { title: "Intro to Photography", price: 0, dateAdded: "2024-06-01", popularity: 2, category: "Photography" },
-  //   { title: "Free IT Resources", price: 0, dateAdded: "2024-06-10", popularity: 4, category: "IT" },
-  //   { title: "Learn Web Development (Free)", price: 0, dateAdded: "2024-06-15", popularity: 6, category: "Developer" },
-  //   { title: "Free Marketing Strategies", price: 0, dateAdded: "2024-06-20", popularity: 1, category: "Marketing" },
-  //   { title: "Health Basics for All", price: 0, dateAdded: "2024-06-25", popularity: 3, category: "Health" },
-  // ];
-
   useEffect(() => {
     axios
       .get("http://localhost:8000/instructor/course/get")
@@ -78,7 +61,6 @@ function Search() {
     if (category === "Others") {
       setSelectedOthers(!selectedOthers);
       if (!selectedOthers) {
-        // If "Others" is selected, filter courses to only show "Others" category
         setSelectedCategories(["Others"]);
       } else {
         setSelectedCategories([]);
@@ -159,23 +141,25 @@ function Search() {
   const handleBookmark = (courseTitle) => {
     setBookmarkedCourses((prev) => {
       const isBookmarked = prev.includes(courseTitle);
-      const newMessage = isBookmarked
-        ? "Course is UnBookmarked!!"
-        : "Course is Bookmarked!!";
 
-      const newToastMessage = { message: newMessage, id: new Date().getTime() };
+      const newToastMessage = {
+        message: isBookmarked
+          ? "Course is Unbookmarked!"
+          : "Course is Bookmarked!",
+        id: new Date().getTime(),
+      };
 
       setToastMessages((prevMessages) => [...prevMessages, newToastMessage]);
 
       setTimeout(() => {
-        setToastMessages((prevMessages) => prevMessages.slice(1));
+        setToastMessages((prevMessages) =>
+          prevMessages.filter((msg) => msg.id !== newToastMessage.id)
+        );
       }, 2000);
 
-      if (isBookmarked) {
-        return prev.filter((course) => course !== courseTitle);
-      } else {
-        return [...prev, courseTitle];
-      }
+      return isBookmarked
+        ? prev.filter((course) => course !== courseTitle)
+        : [...prev, courseTitle];
     });
   };
 
@@ -286,8 +270,7 @@ function Search() {
                 <li onClick={() => handleSortChange("newly-added")}>
                   Newly Added
                 </li>
-                {/* <li onClick={() => handleSortChange("popular")}>Popular</li> */}
-                <li onClick={() => handleSortChange("popular")}>Level</li>
+                <li onClick={() => handleSortChange("popular")}>Popular</li>
               </ul>
             </div>
           )}
@@ -295,26 +278,25 @@ function Search() {
       </div>
 
       <div className="courses-container">
-        {sortedCourses.map((course, index) => (
+        {sortedCourses.map((course) => (
           <div
             key={course.id}
             className="course-card"
             onClick={() => handleCourseClick(course._id)}
           >
-            {/* <div className="course-tag">{course.price === 0 ? 'Free' : 'Paid'}</div>
-            <img src="https://picsum.photos/150" alt="Course" className="course-image" /> */}
             <div className="course-tag">
               {course.pricing === 0 ? "Free" : "Paid"}
             </div>
             <img src={course.image} alt="Course" className="course-image" />
             <h3 className="course-title">{course.title}</h3>
-            {/* <p className="course-meta">Price: ${course.price}</p>
-            <p className="course-description">This is a description of the course.</p> */}
-            <p className="course-meta">Price: ${course.pricing}</p>
+            <p className="course-meta">Price: {course.pricing}rs</p>
             <p className="course-description">{course.description}</p>
             <button
               className="course-plus-btn"
-              onClick={() => handleBookmark(course.title)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBookmark(course.title);
+              }}
             >
               {bookmarkedCourses.includes(course.title) ? "✔" : "+"}
             </button>

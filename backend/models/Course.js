@@ -17,7 +17,7 @@ const CourseSchema = new mongoose.Schema({
   taughtStudents: Number,
   offeredCourses: Number,
   date: Date,
-  title: String,
+  title: { type: String, required: true, unique: true },
   category: String,
   level: String,
   primaryLanguage: String,
