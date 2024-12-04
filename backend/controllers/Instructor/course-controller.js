@@ -2,6 +2,7 @@ const Course = require("../../models/Course");
 const User = require("../../models/User");
 
 const addNewCourse = async (req, res) => {
+  console.log("addNewCourse")
   try {
     const courseData = req.body;
     // console.log(courseData)
@@ -16,7 +17,7 @@ const addNewCourse = async (req, res) => {
       });
     }
 
-    // Create and save the new course
+    // Create and save the new course 
     const newlyCreatedCourse = new Course(courseData);
     const saveCourse = await newlyCreatedCourse.save();
 
