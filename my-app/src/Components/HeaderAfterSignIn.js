@@ -127,20 +127,7 @@ function Header2() {
         <span className={`header-button ${activeLink === 'about' ? 'active' : ''}`} onClick={() => scrollToSection('about')}>
           About
         </span>
-        <div className="dropdown" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <Link to="/courses" className={activeLink === 'courses' ? 'active' : ''}>
-            Courses <FaChevronDown className={`dropdown-icon ${showDropdown ? 'open' : ''}`} />
-          </Link>
-          {showDropdown && (
-            <div className="dropdown-menu">
-              {suggestions.map((suggestion, index) => (
-                <Link key={index} to={`/courses/${suggestion.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {suggestion}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+        
         <span className={`header-button ${activeLink === 'contact' ? 'active' : ''}`} onClick={() => scrollToSection('contact')}>
           Contact
         </span>

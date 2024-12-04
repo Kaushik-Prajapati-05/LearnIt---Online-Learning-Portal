@@ -14,7 +14,7 @@ const buyNow = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Missing required fields: courseId, studentId, or paidAmount',
-      });
+      }); 
     }
 
     // Find course and student
@@ -67,8 +67,10 @@ const buyNow = async (req, res) => {
       instructorId: course.instructorId,
       instructorName: course.instructorName,
       dateOfPurchase: new Date(),
-      courseImage: course.courseImage || '', // Assuming courseImage exists in Course model
+      courseImage: course.image || '', // Assuming courseImage exists in Course model
     };
+
+    console.log(course);
 
     const studentCourses = await StudentCourses.findOne({ userId: studentId });
 

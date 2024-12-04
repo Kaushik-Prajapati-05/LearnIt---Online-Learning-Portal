@@ -3,6 +3,8 @@ import "./Styles/StartLearning.css";
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
+import Header2 from "./HeaderAfterSignIn";
+
 function StartLearning() {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
@@ -38,6 +40,8 @@ function StartLearning() {
   const showTab = (tabId) => setActiveTab(tabId);
 
   return (
+    <>
+    <Header2/>
     <div className="course-container-2">
       {/* Header */}
       <div className="course-header-2">
@@ -154,7 +158,7 @@ function StartLearning() {
           )}
         </div>
       </div>
-    </div>
+    </div></>
   );
 }
 

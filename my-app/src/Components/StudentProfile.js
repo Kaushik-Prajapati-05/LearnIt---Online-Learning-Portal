@@ -11,23 +11,17 @@ import {
 import axios from "axios";
 import "./Styles/Profile.css";
 import img from "../Assets/profile-img.jpeg";
-const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("All Courses");
   const [activeSidebar, setActiveSidebar] = useState("My Courses");
   const [courses, setCourses] = useState([]); // State to store courses
   const [loading, setLoading] = useState(true); // Loading state
-const [error, setError] = useState(""); // Error state
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const token = localStorage.getItem('accessToken');
+  const [error, setError] = useState(""); // Error state
 
-
-
-
-
-
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -35,8 +29,6 @@ const [error, setError] = useState(""); // Error state
         setLoading(true);
         setError("");
 
-
-        // const studentId = localStorage.getItem("studentId"); // Get studentId from localStorage
         const response = await fetch(
           `http://localhost:8000/student/course/listcourses`,
           {
@@ -45,13 +37,11 @@ const [error, setError] = useState(""); // Error state
               "Content-Type": "application/json",
               authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ studentId:userInfo._id  }),
+            body: JSON.stringify({ studentId: userInfo._id }),
           }
         );
 
-
         const data = await response.json();
-       
         console.log(data.data);
         setCourses(data.data || []); // Assuming response structure
       } catch (err) {
@@ -62,25 +52,22 @@ const [error, setError] = useState(""); // Error state
       }
     };
 
-
     fetchCourses();
-  }, []);
-const handleTabClick = (tab) => {
+  }, [token, userInfo._id]);
+
+  const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-
 
   const handleSidebarClick = (section) => {
     setActiveSidebar(section);
   };
-
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
     window.location.reload();
   };
-
 
   const filteredCourses = () => {
     switch (activeTab) {
@@ -92,7 +79,6 @@ const handleTabClick = (tab) => {
         return courses;
     }
   };
-
 
   return (
     <div className="profile-page">
@@ -108,9 +94,7 @@ const handleTabClick = (tab) => {
               <img src={img} alt="Profile Avatar" />
             </div>
             <h2>{userInfo.userName}</h2>
-            <p className="profile-description">
-              {userInfo.userEmail}
- </p>
+            <p className="profile-description">{userInfo.userEmail}</p>
           </div>
           <ul className="sidebar-menu">
             <li
@@ -127,7 +111,7 @@ const handleTabClick = (tab) => {
             </li>
             <li
               className={activeSidebar === "Logout" ? "active" : ""}
-              onClick={() => handleLogout()}
+              onClick={handleLogout}
             >
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>
@@ -151,7 +135,7 @@ const handleTabClick = (tab) => {
                   </p>
                 </div>
                 <div className="course-card-2">
-<FontAwesomeIcon icon={faClipboardCheck} size="2x" />
+                  <FontAwesomeIcon icon={faClipboardCheck} size="2x" />
                   <h3>Finished Courses</h3>
                   <p>
                     {courses.filter((course) => course.status === "Completed")
@@ -178,20 +162,33 @@ const handleTabClick = (tab) => {
                 ) : error ? (
                   <p className="error">{error}</p>
                 ) : filteredCourses().length > 0 ? (
-                  filteredCourses().map((course) => (
-                    <div className="course-item" key={course.courseId}>
-                      <h3>{course.title}</h3>
-                      <p>Instructor: {course.instructorName}</p>
-                      <p>Purchased on: {new Date(course.dateOfPurchase).toDateString()}</p>
-                    </div>
-                  ))
+                  <div className="courses-container">
+                    {filteredCourses().map((course) => (
+                      <div
+                        key={course.courseId}
+                        className="course-card"
+                        onClick={() => navigate(`/start-learning/${course._id}`)}
+                      >
+                        <img
+                          src={course.courseImage}
+                          alt="Course"
+                          className="course-image"
+                        />
+                        <h3 className="course-title">{course.title}</h3>
+                        <p className="course-meta">Price: ${course.pricing}</p>
+                        <p className="course-description">
+                          {course.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <p className="no-course">No courses available!</p>
                 )}
               </div>
             </>
           )}
-{activeSidebar === "Quizzes" && (
+          {activeSidebar === "Quizzes" && (
             <div className="quizzes-section">
               <h3>Your Quizzes</h3>
               <p>No quizzes available!</p>
@@ -202,6 +199,5 @@ const handleTabClick = (tab) => {
     </div>
   );
 };
-
 
 export default Profile;
