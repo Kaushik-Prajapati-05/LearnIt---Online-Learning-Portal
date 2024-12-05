@@ -23,10 +23,12 @@ app.use(cors({
 
 
 //database connection
-mongoose
-.connect("mongodb+srv://parvpatel20804:Parv1234@cluster0.fw8ji.mongodb.net/learnit")
-.then(() => console.log("mongodb is connected"))
-.catch((e) => console.log(e));
+mongoose.connect('mongodb+srv://parvpatel20804:Parv1234@cluster0.fw8ji.mongodb.net/learnit', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch((error) => console.log('MongoDB connection error: ', error));
 
 
 
@@ -43,7 +45,7 @@ app.use("/auth", authRoutes);
 app.use('/api/coursedetails', coursedetailsRoute);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", instructorCourseRoutes);
-app.use("/instructor/quiz/add", quizRoutes);
+app.use("/instructor/quiz", quizRoutes);
 
 app.use((err, req, res, next) => {
     console.log(err.stack);
