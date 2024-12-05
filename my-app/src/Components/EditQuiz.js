@@ -14,6 +14,9 @@ import { NavigateBefore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import './Styles/EditQuiz.css';
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const EditQuiz = () => {
   const navigate = useNavigate();
 

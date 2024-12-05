@@ -4,6 +4,9 @@ import { FaLinkedin } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import Header2 from "./HeaderAfterSignIn";
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 function BuyNow() {
   const { id } = useParams();
   const [courses, setCourses] = useState([]);
@@ -20,7 +23,7 @@ function BuyNow() {
         // const response = await fetch(`http://localhost:8000/student/course/buy`,{},{});
 
         const response = await fetch(
-          `http://localhost:8000/student/course/buy`,
+          `${ENDPOINT}/student/course/buy`,
           {
             method: "POST",
             headers: {
@@ -58,7 +61,7 @@ function BuyNow() {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/coursedetails/${id}`
+          `${ENDPOINT}/api/coursedetails/${id}`
         );
 
         if (!response.ok) {

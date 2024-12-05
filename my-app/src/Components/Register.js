@@ -4,6 +4,9 @@ import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import './Styles/Register.css';
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 function Register({ onClose, onLogin }) {
   const [role, setRole] = useState('Student'); // Default role
   const [username, setUsername] = useState('');
@@ -61,7 +64,7 @@ function Register({ onClose, onLogin }) {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/auth/register', {
+      const response = await fetch(`{ENDPOINT}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

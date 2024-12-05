@@ -4,6 +4,9 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import 
 import "./Styles/EditProfile.css";
 import img from "../Assets/profile-img.jpeg";
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const EditProfile = () => {
   const userinfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userinfo.userName);
@@ -44,7 +47,7 @@ const EditProfile = () => {
   
     try {
       console.log(userinfo)
-      const response = await fetch(`http://localhost:8000/auth/update/${userinfo._id}`, {
+      const response = await fetch(`${ENDPOINT}/auth/update/${userinfo._id}`, {
         method: "POST", // POST request
         headers: {
           "Content-Type": "application/json",

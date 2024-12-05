@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000', 
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -24,7 +24,7 @@ app.use(cors({
 
 //database connection
 mongoose
-.connect("mongodb+srv://parvpatel20804:Parv1234@cluster0.fw8ji.mongodb.net/learnit")
+.connect(process.env.MONGO_URL)
 .then(() => console.log("mongodb is connected"))
 .catch((e) => console.log(e));
 
