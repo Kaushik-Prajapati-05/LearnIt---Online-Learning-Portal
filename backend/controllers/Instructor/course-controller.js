@@ -6,6 +6,9 @@ const addNewCourse = async (req, res) => {
   try {
     const courseData = req.body;
     // console.log(courseData)
+    const instructorId = req.user._id;
+    // Check if a course with the same title already exists
+    courseData.instructorId = instructorId;
 
     // Check if a course with the same title already exists
     const existingCourse = await Course.findOne({ title: courseData.title });
