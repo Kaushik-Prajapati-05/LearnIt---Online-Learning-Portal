@@ -5,6 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Header2 from "./HeaderAfterSignIn";
 
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
+
+
 function StartLearning() {
   const { id } = useParams();
 
@@ -17,7 +21,7 @@ function StartLearning() {
     const fetchCourses = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/coursedetails/${id}`
+          `${ENDPOINT}/api/coursedetails/${id}`
         );
         // console.log(response);
         if (!response.ok) {

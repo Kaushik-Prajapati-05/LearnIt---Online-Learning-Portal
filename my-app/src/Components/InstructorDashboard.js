@@ -5,6 +5,12 @@ import axios from "axios";
 import "./Styles/InstructorDashboard.css";
 import CreateCourse from "./CreateCourse";
 import CreateQuiz from "./CreateQuiz";
+
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
+
+
 // Initial course and quiz data
 // const initialCoursesData = [
 //   { id: 1, title: "React & Redux Complete Course 2024", students: 10, revenue: "$1500" },
@@ -31,12 +37,9 @@ const InstructorDashboard = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        console.log(userInfo);
-        const response = await axios.get(
-          `http://localhost:8000/instructor/course/getbyid/${userInfo._id}`
-        );
-        
-        setCoursesData(response.data.data);
+        console.log(userInfo  )
+        const response = await axios.get(`${ENDPOINT}/instructor/course/getbyid/${userInfo._id}`);
+        setCoursesData(response.data.data); 
       } catch (error) {
         console.error("Error fetching courses:", error);
       }

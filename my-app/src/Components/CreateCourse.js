@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import { NavigateBefore } from '@mui/icons-material';
 import './Styles/CreateCourse.css';
 
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const CreateCourse = () => {
   const [currentSection, setCurrentSection] = useState(1);
   const [courseDetails, setCourseDetails] = useState({
@@ -92,7 +94,7 @@ const CreateCourse = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/media/upload', {
+      const response = await fetch(`${ENDPOINT}/media/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -119,7 +121,7 @@ const CreateCourse = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/media/upload', {
+      const response = await fetch(`${ENDPOINT}/media/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -194,7 +196,7 @@ const CreateCourse = () => {
 
     try {
       console.log(courseData);
-      const response = await fetch('http://localhost:8000/instructor/course/add', {
+      const response = await fetch(`${ENDPOINT}/instructor/course/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

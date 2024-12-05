@@ -18,6 +18,9 @@ import axios from "axios";
 import Header2 from "./HeaderAfterSignIn";
 import Footer from "./Footer";
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const EditCourse = ({ courseData }) => {
   const { id } = useParams();
   const [currentSection, setCurrentSection] = useState(1);
@@ -37,7 +40,7 @@ const EditCourse = ({ courseData }) => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/instructor/course/get/details/${id}`);
+        const response = await fetch(`${ENDPOINT}/instructor/course/get/details/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch course data');
         }
@@ -144,7 +147,7 @@ const EditCourse = ({ courseData }) => {
   
     // API request to update course using PUT
     try {
-      const response = await fetch(`http://localhost:8000/instructor/course/update/${id}`, {
+      const response = await fetch(`${ENDPOINT}/instructor/course/update/${id}`, {
         method: "PUT", // Ensure PUT method is used
         headers: {
           "Content-Type": "application/json",

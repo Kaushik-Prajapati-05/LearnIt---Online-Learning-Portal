@@ -5,6 +5,10 @@ import './Styles/Header_after_signin.css';
 import capLogo from '../Assets/Cap.png';
 import DefaultProfilePic from '../Assets/profile-img.jpeg';
 
+
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 function Header2() {
   
   const [showSearch, setShowSearch] = useState(false);
