@@ -32,6 +32,8 @@ const CreateCourse = () => {
     isPublished: false, // Added default for isPublished
   });
 
+  const [imaage,setImaage] = useState();
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const [modules, setModules] = useState([]);
@@ -100,7 +102,9 @@ const CreateCourse = () => {
       if (response.ok) { // Check that url exists in the response
         console.log('Course image uploaded successfully:', result.data);
         setCourseDetails({ ...courseDetails, image: result.data });
-        console.log(courseDetails.image);
+        await setImaage(result.data);
+        // console.log(imaage);
+        return result.data;
 
       } else {
         console.error('Failed to upload course image:', result.message);
@@ -144,23 +148,25 @@ const CreateCourse = () => {
     }
 
     // Upload the course image if it exists
-    if (courseDetails.courseImage) {
-      await uploadCourseImage(courseDetails.courseImage);
-    }
-
+    // if (courseDetails.courseImage) {
+      
+    //   const i = await uploadCourseImage(courseDetails.courseImage);
+    //   await setImaage (i);
+    // }
+  
     // Upload files for each module (content and video)
-    for (const module of modules) {
-      if (module.moduleContent) {
-        const contentUrl = await handleFileUploadToServer(module.moduleContent, 'content');
-        module.moduleContentUrl = contentUrl; // Save the uploaded content URL
-      }
-      if (module.moduleVideo) {
-        const videoUrl = await handleFileUploadToServer(module.moduleVideo, 'video');
-        module.moduleVideoUrl = videoUrl; // Save the uploaded video URL
-      }
-    }
+    // for (const module of modules) {
+    //   if (module.moduleContent) {
+    //     const contentUrl = await handleFileUploadToServer(module.moduleContent, 'content');
+    //     module.moduleContentUrl = contentUrl; // Save the uploaded content URL
+    //   }
+    //   if (module.moduleVideo) {
+    //     const videoUrl = await handleFileUploadToServer(module.moduleVideo, 'video');
+    //     module.moduleVideoUrl = videoUrl; // Save the uploaded video URL
+    //   }
+    // }
 
-    const courseData = {
+    var courseData = {
       instructorId: userInfo._id, // Example: dynamically set based on logged-in user
       instructorName: userInfo.userName, // Example: dynamically set based on logged-in user
       title: courseDetails.title,
@@ -169,13 +175,22 @@ const CreateCourse = () => {
       primaryLanguage: courseDetails.primaryLanguage,
       subtitle: courseDetails.subtitle,
       description: courseDetails.description,
-      image: courseDetails.image,
+      image: imaage,
       welcomeMessage: courseDetails.welcomeMessage,
       pricing: courseDetails.pricing,
       objectives: courseDetails.objectives,
       curriculum: modules, // Include modules with updated URLs
       isPublished: courseDetails.isPublished, // Ensure isPublished is set
     };
+
+    if (courseDetails.courseImage) {
+      const uploadedImage = await uploadCourseImage(courseDetails.courseImage);
+      console.log(uploadedImage); 
+       courseData = {
+        ...courseDetails,
+        image: uploadedImage,
+      };
+    }
 
     try {
       console.log(courseData);
@@ -192,7 +207,7 @@ const CreateCourse = () => {
       if (response.ok) {
         console.log('Course created successfully:', data);
         alert('Course created successfully!');
-        window.location.href = '/instructor-dashboard';  // Redirect to instructor dashboard page
+        // window.location.href = '/instructor-dashboard';  // Redirect to instructor dashboard page
       } else {
         console.error('Failed to create course:', data.message);
         alert('Failed to create course');
@@ -204,7 +219,7 @@ const CreateCourse = () => {
   };
 
   const handleQuizRedirect = () => {
-    navigate('/create-quiz');
+    // navigate('/create-quiz');
   };
 
   return (
@@ -712,7 +727,7 @@ const CreateCourse = () => {
             },
           }}
           startIcon={<NavigateBefore />}
-          onClick={() => navigate('/instructor-dashboard')}
+          // onClick={() => navigate('/instructor-dashboard')}
         >
           Cancel
         </Button>
