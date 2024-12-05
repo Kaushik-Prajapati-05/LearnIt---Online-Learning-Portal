@@ -7,89 +7,40 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  MenuItem,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { NavigateBefore } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './Styles/EditQuiz.css';
+import axios from 'axios';
 
 const EditQuiz = () => {
   const navigate = useNavigate();
-
+  const { id } = useParams();
   const [quizDetails, setQuizDetails] = useState({
-    course: '', // Initially set to empty
-    quiz: '', // Initially set to empty
+    quizTitle: '', // Initially set to empty or null
     passingScore: '', // Initially set to empty or null
-    quizzes: {
-      'Course 1': [
-        {
-          quizName: 'Quiz 1',
-          passingScore: 80, // Example passing score (can be replaced with a calculation)
-          questions: [
-            {
-              questionText: 'What is React?',
-              options: ['A library', 'A framework', 'A language', 'A tool'],
-              correctAnswer: '0',
-            },
-          ],
-        },
-        {
-          quizName: 'Quiz 2',
-          passingScore: 85, // Example passing score
-          questions: [
-            {
-              questionText: 'What is JSX?',
-              options: ['A JavaScript extension', 'A CSS preprocessor', 'A HTML template', 'A library'],
-              correctAnswer: '0',
-            },
-          ],
-        },
-      ],
-      'Course 2': [
-        {
-          quizName: 'Quiz 1',
-          passingScore: 75, // Example passing score
-          questions: [
-            {
-              questionText: 'What is JavaScript?',
-              options: ['A programming language', 'A framework', 'A library', 'A tool'],
-              correctAnswer: '0',
-            },
-          ],
-        },
-      ],
-    },
     questions: [],
   });
 
-  const handleSelectCourse = (e) => {
-    const selectedCourse = e.target.value;
-    setQuizDetails((prev) => ({
-      ...prev,
-      course: selectedCourse,
-      quiz: '', // Reset quiz
-      passingScore: '', // Reset passing score when course changes
-      questions: [],
-    }));
-  };
+  const [loading, setLoading] = useState(true); // Loading state for API call
+  const [error, setError] = useState(null); // Error state for handling errors
+  useEffect(() => {
+    const fetchQuizDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/instructor/quiz/details/${id}`);
+        const { quizTitle,passingScore, questions } = response.data;
 
-  const handleSelectQuiz = (e) => {
-    const selectedQuiz = e.target.value;
-    const selectedCourse = quizDetails.course;
-    const quiz = quizDetails.quizzes[selectedCourse].find((q) => q.quizName === selectedQuiz);
+        setQuizDetails({ quizTitle,passingScore, questions });
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch quiz details.');
+        setLoading(false);
+      }
+    };
 
-    // Set the passing score based on the quiz data (e.g., 80% of the total number of questions or predefined value)
-    const passingScore = quiz ? quiz.passingScore : '';
-
-    setQuizDetails((prev) => ({
-      ...prev,
-      quiz: selectedQuiz,
-      passingScore: passingScore, // Dynamically set the passing score from quiz data
-      questions: quiz ? quiz.questions : [],
-    }));
-  };
-
+    fetchQuizDetails();
+  }, [id]);
   const handleAddQuestion = () => {
     const newQuestion = {
       questionText: '',
@@ -122,31 +73,58 @@ const EditQuiz = () => {
     setQuizDetails((prev) => ({ ...prev, questions: updatedQuestions }));
   };
 
-  const handleSaveQuiz = () => {
-    if (!quizDetails.passingScore || quizDetails.questions.length === 0) {
+  const handleSaveQuiz = async () => {
+    if (!quizDetails.quizTitle||!quizDetails.passingScore || quizDetails.questions.length === 0) {
       alert('Please fill in all required fields.');
       return;
     }
-    alert('Quiz saved successfully!');
-    navigate('/instructor-dashboard');
+
+    try {
+      await axios.put(`http://localhost:8000/instructor/quiz/update/${id}`, quizDetails);
+      alert('Quiz updated successfully!');
+      navigate('/instructor-dashboard');
+    } catch (err) {
+      console.error('Failed to update quiz:', err);
+      alert('Failed to update quiz. Please try again.');
+    }
   };
 
-  useEffect(() => {
-    const selectedCourse = quizDetails.course;
-    const selectedQuiz = quizDetails.quiz;
-    const quiz = quizDetails.quizzes[selectedCourse]?.find((q) => q.quizName === selectedQuiz);
-    if (quiz) {
-      setQuizDetails((prev) => ({
-        ...prev,
-        questions: quiz.questions,
-      }));
-    }
-  }, [quizDetails.course, quizDetails.quiz]);
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
 
   return (
     <Box className="create-quiz-container">
       <div className="title">Edit Quiz</div>
         
+        {/* Quiz Title */}
+        <TextField
+            label="Quiz Title"
+            variant="outlined"
+            fullWidth
+            type="String"
+            value={quizDetails.quizTitle}
+            onChange={(e) =>
+              setQuizDetails((prev) => ({
+                ...prev,
+                quizTitle: e.target.value,
+              }))
+            }
+            className="title"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#ff9100' },
+                '&:hover fieldset': { borderColor: '#ff5e00' },
+                '&.Mui-focused fieldset': { borderColor: '#ff5e00' },
+              },
+              '& .MuiInputLabel-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
+              '& .MuiInputBase-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
+            }}
+          />
     
         {/* Passing Score */}
         

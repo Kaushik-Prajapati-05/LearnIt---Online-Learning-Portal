@@ -71,7 +71,7 @@ const InstructorDashboard = () => {
 
   // Function to handle edit button click for quizzes
   const handleEditQuiz = (id) => {
-    navigate(`/quiz/${id}`);
+    navigate(`/edit-quiz/${id}`);
   };
 
   // Function to handle logout
