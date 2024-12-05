@@ -17,6 +17,7 @@ function BuyNow() {
   const [openSections, setOpenSections] = useState({});
   const token = localStorage.getItem("accessToken");
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  console.log(id);
   const handleBuyNow = () => {
     const buy = async () => {
       try {

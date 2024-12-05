@@ -29,6 +29,7 @@
 .quiz_creation-question-input,
 .quiz_creation-option-input,
 .quiz_creation-course-name-input,
+.quiz_creation-quiz-name-input,
 .quiz_creation-correct-answer-select {
     margin-bottom: 16px;
 }

@@ -20,18 +20,18 @@ const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
 //   { id: 5, title: "JavaScript Mastery 2024", students: 10, revenue: "$5400" },
 // ];
 
-const initialQuizzesData = [
-  { id: 1, title: "React Basics Quiz", coursename: 'webdev', passRate: "80%" },
-  { id: 2, title: "Next JS Advanced Quiz", coursename: 'js', passRate: "70%" },
-  { id: 3, title: "CSS Fundamentals Quiz", coursename: 'webdev', passRate: "75%" },
-  { id: 4, title: "Python Essentials Quiz", coursename: 'python', passRate: "90%" },
-];
+// const initialQuizzesData = [
+//   { id: 1, title: "React Basics Quiz", coursename: 'webdev', passRate: "80%" },
+//   { id: 2, title: "Next JS Advanced Quiz", coursename: 'js', passRate: "70%" },
+//   { id: 3, title: "CSS Fundamentals Quiz", coursename: 'webdev', passRate: "75%" },
+//   { id: 4, title: "Python Essentials Quiz", coursename: 'python', passRate: "90%" },
+// ];
 
 const InstructorDashboard = () => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-  const [activeTab, setActiveTab] = useState('courses'); // Default to 'courses'
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const [activeTab, setActiveTab] = useState("courses"); // Default to 'courses'
   const [coursesData, setCoursesData] = useState([]); // Managing courses state
-  const [quizzesData, setQuizzesData] = useState(initialQuizzesData); // Managing quizzes state
+  const [quizzesData, setQuizzesData] = useState([]); // Managing quizzes state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,8 +45,26 @@ const InstructorDashboard = () => {
       }
     };
 
-    fetchCourses();  // Call the fetch function
+    fetchCourses(); // Call the fetch function
   }, []);
+
+  useEffect(() => {
+    const fetchAllQuizzes = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/instructor/quiz/getallquizzes/${userInfo._id}`
+        );
+        console.log(response.data.data);
+        setQuizzesData(response.data.data); // Update quizzes data state
+      } catch (error) {
+        console.error("Error fetching quizzes:", error);
+      }
+    };
+
+    if (activeTab === "quizzes") {
+      fetchAllQuizzes();
+    }
+  }, [activeTab]);
 
   // Function to handle edit button click for courses
   const handleEditCourse = (id) => {
@@ -56,13 +74,13 @@ const InstructorDashboard = () => {
 
   // Function to handle edit button click for quizzes
   const handleEditQuiz = (id) => {
-    navigate(`/quiz/${id}`);
+    navigate(`/edit-quiz/${id}`);
   };
 
   // Function to handle logout
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/');
+    navigate("/");
   };
 
   // Function to calculate total students
@@ -79,7 +97,6 @@ const InstructorDashboard = () => {
     }, 0);
   };
 
-
   // Function to calculate total courses
   const getTotalCourses = () => {
     return coursesData.length;
@@ -92,14 +109,14 @@ const InstructorDashboard = () => {
         <nav>
           <ul>
             <li
-              className={activeTab === 'courses' ? 'active' : ''}
-              onClick={() => setActiveTab('courses')}
+              className={activeTab === "courses" ? "active" : ""}
+              onClick={() => setActiveTab("courses")}
             >
               Courses
             </li>
             <li
-              className={activeTab === 'quizzes' ? 'active' : ''}
-              onClick={() => setActiveTab('quizzes')}
+              className={activeTab === "quizzes" ? "active" : ""}
+              onClick={() => setActiveTab("quizzes")}
             >
               Quizzes
             </li>
@@ -110,7 +127,7 @@ const InstructorDashboard = () => {
         </nav>
       </aside>
       <main className="courses-content">
-        {activeTab === 'courses' && (
+        {activeTab === "courses" && (
           <>
             <header className="header-2">
               <h1>Courses Dashboard</h1>
@@ -147,11 +164,18 @@ const InstructorDashboard = () => {
               <tbody>
                 {coursesData.map((course) => (
                   <tr key={course.id}>
-                    <td><Link to={`/course/${course.id}`}>{course.title}</Link></td>
+                    <td>
+                      <Link to={`/course/${course.id}`}>{course.title}</Link>
+                    </td>
                     <td>{course.students.length}</td>
                     <td>{course.students.length * course.pricing}</td>
                     <td>
-                      <button className="edit-btn" onClick={() => handleEditCourse(course._id)}><FaEdit /></button>
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEditCourse(course._id)}
+                      >
+                        <FaEdit />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -160,7 +184,7 @@ const InstructorDashboard = () => {
           </>
         )}
 
-        {activeTab === 'quizzes' && (
+        {activeTab === "quizzes" && (
           <>
             <header className="header-2">
               <h1>Quizzes</h1>
@@ -182,12 +206,21 @@ const InstructorDashboard = () => {
               </thead>
               <tbody>
                 {quizzesData.map((quiz) => (
-                  <tr key={quiz.id}>
-                    <td><Link to={`/quiz/${quiz.id}`}>{quiz.title}</Link></td>
-                    <td>{quiz.coursename}</td>
-                    <td>{quiz.passRate}</td>
+                  <tr key={quiz._id}>
                     <td>
-                      <button className="edit-btn" onClick={() => handleEditQuiz(quiz.id)}><FaEdit /></button>
+                      
+                        {quiz.quizTitle || "Untitled Quiz"}
+                      
+                    </td>
+                    <td>{quiz.courseId?.title || "Unknown Course"}</td>
+                    <td>{quiz.passingScore}%</td>
+                    <td>
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEditQuiz(quiz._id)}
+                      >
+                        <FaEdit />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -196,13 +229,13 @@ const InstructorDashboard = () => {
           </>
         )}
 
-        {activeTab === 'create-course' && (
+        {activeTab === "create-course" && (
           <>
             <CreateCourse />
           </>
         )}
 
-        {activeTab === 'create-quiz' && (
+        {activeTab === "create-quiz" && (
           <>
             <CreateQuiz />
           </>
