@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { addQuiz } = require('../../controllers/Instructor/quiz-controller'); // Import the addQuiz controller function
+const { addQuiz , getAllquizzes} = require('../../controllers/Instructor/quiz-controller'); // Import the addQuiz controller function
 
 // Route to add a quiz
-router.post('/', addQuiz);
+router.post('/add', addQuiz);
+router.get('/getAllquizzes/:instructorId', getAllquizzes);
 
 module.exports = router;

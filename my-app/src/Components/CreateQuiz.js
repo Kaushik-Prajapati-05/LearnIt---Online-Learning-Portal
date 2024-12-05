@@ -18,8 +18,10 @@ const CreateQuiz = () => {
   const navigate = useNavigate();
 
   const [quizDetails, setQuizDetails] = useState({
+    quizTitle: '',
     passingScore: '',
     questions: [],
+    courseName: '', 
   });
 
   const handleAddQuestion = () => {
@@ -53,18 +55,29 @@ const CreateQuiz = () => {
   };
 
   const handleSubmitQuiz = async () => {
-    if (!quizDetails.passingScore || quizDetails.questions.length === 0) {
+    if (!quizDetails.passingScore || quizDetails.questions.length === 0 || !quizDetails.courseName||!quizDetails.quizTitle) {
       alert('Please fill in all required fields.');
       return;
     }
+    // const courseId = await getCourseIdByName(quizDetails.courseName);
+    // if (!courseId) {
+    //   return; // Stop if courseId is not found
+    // }
 
+    const quizData = {
+      quizTitle: quizDetails.quizTitle,
+      courseName: quizDetails.courseName,
+      passingScore: quizDetails.passingScore,
+      
+      questions: quizDetails.questions,
+    };
     try {
       const response = await fetch('http://localhost:8000/instructor/quiz/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(quizDetails),
+        body: JSON.stringify(quizData),
       });
 
       const data = await response.json();
@@ -101,6 +114,45 @@ const CreateQuiz = () => {
           }))
         }
         className="quiz_creation-course-name-input"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#ff9100', // Orange border
+            },
+            '&:hover fieldset': {
+              borderColor: '#ff5e00', // Hover color
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#ff5e00', // Focused border color
+            },
+          },
+          '& .MuiInputLabel-root': {
+            color: 'white', // White label text
+            fontWeight: 'bold',
+            fontFamily: 'Poppins', // Set font family to Poppins
+          },
+          '& .MuiInputBase-root': {
+            color: 'white', // White input text color
+            fontWeight: 'bold',
+            fontFamily: 'Poppins', // Set font family to Poppins
+          },
+        }}
+      />
+
+      <div> </div>
+      <TextField
+        label="Quiz Title"
+        variant="outlined"
+        fullWidth
+        type="text" // Changed type to text
+        value={quizDetails.quizTitle} // Assuming "courseName" is a property in quizDetails
+        onChange={(e) =>
+          setQuizDetails((prev) => ({
+            ...prev,
+            quizTitle: e.target.value, // Update courseName property
+          }))
+        }
+        className="quiz_creation-quiz-title-input"
         sx={{
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
