@@ -14,6 +14,8 @@ import { NavigateBefore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import './Styles/CreateQuiz.css';
 
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const CreateQuiz = () => {
   const navigate = useNavigate();
 
@@ -72,7 +74,7 @@ const CreateQuiz = () => {
       questions: quizDetails.questions,
     };
     try {
-      const response = await fetch('http://localhost:8000/instructor/quiz/add', {
+      const response = await fetch(`${ENDPOINT}/instructor/quiz/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

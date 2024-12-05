@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
 import axios from "axios";
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
+
 function Search() {
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -34,7 +38,7 @@ function Search() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/instructor/course/get")
+      .get(`${ENDPOINT}/instructor/course/get`)
       .then((response) => {
         if (Array.isArray(response.data.data)) {
           setCourses(response.data.data); // Set courses to state

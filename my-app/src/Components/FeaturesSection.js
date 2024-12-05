@@ -2,6 +2,9 @@ import React from 'react';
 import './Styles/FeaturesSection.css';
 import { People, LibraryBooks, School, LaptopMac } from '@mui/icons-material'; // Import MUI icons
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const features = [
   {
     icon: <People style={{ fontSize: 50, color: "#ff8c00" }} />,

@@ -4,7 +4,10 @@ const User = require("../../models/User");
 const addNewCourse = async (req, res) => {
   console.log("addNewCourse")
   try {
-    const courseData = req.body;
+    var courseData = req.body;  
+    if(!courseData.pricing )courseData.pricing='0';
+
+    console.log(courseData);
    // Check if a course with the same title already exists
     const existingCourse = await Course.findOne({ title: courseData.title });
 
@@ -22,7 +25,7 @@ const addNewCourse = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Course saved successfully",
-      data: saveCourse,
+      data: saveCourse, 
     });
   } catch (e) {
     console.error(e);

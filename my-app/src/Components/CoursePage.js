@@ -9,6 +9,9 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useNavigate, useParams } from "react-router-dom";
 import Header2 from "./HeaderAfterSignIn";
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 function CoursePage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -143,7 +146,7 @@ function CoursePage() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:8000/api/coursedetails/${id}`
+          `${ENDPOINT}/api/coursedetails/${id}`
         );
         const data = await response.json();
         console.log(data);

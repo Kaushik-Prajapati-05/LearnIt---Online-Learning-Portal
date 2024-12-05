@@ -14,6 +14,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './Styles/EditQuiz.css';
 import axios from 'axios';
 
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 const EditQuiz = () => {
   const navigate = useNavigate();
   const { id } = useParams();
