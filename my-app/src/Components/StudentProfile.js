@@ -12,6 +12,11 @@ import axios from "axios";
 import "./Styles/Profile.css";
 import img from "../Assets/profile-img.jpeg";
 
+
+
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
+
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("All Courses");
   const [activeSidebar, setActiveSidebar] = useState("My Courses");
@@ -30,7 +35,7 @@ const Profile = () => {
         setError("");
 
         const response = await fetch(
-          `http://localhost:8000/student/course/listcourses`,
+          `${ENDPOINT}/student/course/listcourses`,
           {
             method: "POST",
             headers: {

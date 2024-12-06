@@ -6,6 +6,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import './Styles/Login.css';
 
 
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+
 function Login({ onClose, onRegister }) {
   const navigate = useNavigate();
   const [role, setRole] = useState('User');
@@ -24,7 +26,7 @@ function Login({ onClose, onRegister }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/auth/login', {
+      const response = await fetch(`${ENDPOINT}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ import { Divider } from '@mui/material';
 import { Person, AccessTime } from '@mui/icons-material'; // Import MUI icons
 import './Styles/CoursesCatalog.css';
 
-
+const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
 
 
 function CourseCatalog() {
@@ -17,7 +17,7 @@ function CourseCatalog() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/instructor/course/get',{
+        const response = await fetch(`${ENDPOINT}/instructor/course/get`,{
           method: "GET",
           headers: {
             "Content-Type": "application/json"

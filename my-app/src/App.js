@@ -22,6 +22,8 @@ import Headeraftersignin from './Components/HeaderAfterSignIn.js';
 import EditQuiz from "./Components/EditQuiz.js";
 import { Login } from "@mui/icons-material";
 import Profile from "./Components/StudentProfile.js";
+import StudentRoute from "./Components/Middleware/studentRoute.js"
+import ProtectRoute from "./Components/Middleware/protectRoute.js"
 
 function App() {
   return (
@@ -30,20 +32,34 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/learnCourse/:id" element={<CoursePage />} />
-        <Route path="/instructor-dashboard" element={<InstructorDashboardPage />} />
-         <Route path="/create-course" element={
+
+        <Route path="/instructor-dashboard" element={
+          <ProtectRoute>
+          <InstructorDashboardPage />
+          </ProtectRoute>
+
+          } />
+        <Route path="/create-course" element={
           <> <Header />
+          <ProtectRoute>
             <CreateCourse />
+            </ProtectRoute>
             <Footer />
           </>} /> 
         <Route path="/profile" element={<SturdentProfilePage />} />
         <Route path="/edit-profile" element={<EditProfilePage />} />
         <Route path="/search-courses" element={<SearchPage />} />
-        <Route path="/create-quize" element={<CreateQuiz />} />
-        <Route path="/course/:id" element={<EditCourse />} />
+        <Route path="/create-quize" element={
+          <ProtectRoute><CreateQuiz /></ProtectRoute>} />
+        <Route path="/course/:id" element={
+         <ProtectRoute><EditCourse /> </ProtectRoute> } />
         <Route path="/buy-now/:id" element={<BuyNowPage />} />
         <Route path="/start-learning/:id" element={<StartLearningPage />} />
-        <Route path="/edit-quiz/:id" element={<EditQuiz />} />
+        <Route path="/edit-quiz/:id" element={
+          <ProtectRoute>
+          <EditQuiz />
+          </ProtectRoute>
+          } />
       </Routes>   
 
     </div>
