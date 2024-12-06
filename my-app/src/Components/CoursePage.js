@@ -8,12 +8,14 @@ import { IconButton } from "@mui/material";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useNavigate, useParams } from "react-router-dom";
 import Header2 from "./HeaderAfterSignIn";
+import Footer from "./Footer"
+import axios from "axios";
+const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
-
-const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
 
 function CoursePage() {
   const { id } = useParams();
+  const {quizId} = useParams();
   const navigate = useNavigate();
   const [completedLessons, setCompletedLessons] = useState([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
@@ -25,9 +27,15 @@ function CoursePage() {
   const [showQuizFinalResults, setShowQuizFinalResults] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
   const [showAnswers, setShowAnswers] = useState(false);
-
-  const [video,setVideo] = useState(""); 
+  const [pdf, setPdf] = useState("");
+  const [video, setVideo] = useState("");
   const [courseDetails, setCourseDetails] = useState([]); // Holds the course details fetched from the API
+  const [quizDetails, setQuizDetails] = useState({
+    quizTitle: '', // Initially set to empty or null
+    passingScore: '', // Initially set to empty or null
+    questions: [],
+  });
+
   const [modules, setModules] = useState([
     {
       title: "LearnPress Getting Started",
@@ -86,73 +94,27 @@ function CoursePage() {
   const [loading, setLoading] = useState(true); // Indicates if data is being loaded
   const [error, setError] = useState(null); // Stores any error message during API fetching
 
-  // const modules = [
-  //   {
-  //     title: "LearnPress Getting Started",
-  //     items: [
-  //       { title: "What is LearnPress?", type: "video", time: "20 minutes" },
-  //       { title: "How to use LearnPress?", type: "video", time: "60 minutes" },
-  //       {
-  //         title: "Demo the Quiz of LearnPress",
-  //         type: "quiz",
-  //         time: "10 minutes",
-  //         quiz: {
-  //           passingMarks: 2,
-  //           questions: [
-  //             {
-  //               question: "What is the primary purpose of LearnPress?",
-  //               options: [
-  //                 "Online Learning",
-  //                 "Cooking",
-  //                 "Shopping",
-  //                 "Traveling",
-  //               ],
-  //               correctAnswer: 0,
-  //             },
-  //             {
-  //               question: "What language is LearnPress built on?",
-  //               options: ["JavaScript", "Python", "PHP", "Ruby"],
-  //               correctAnswer: 2,
-  //             },
-  //             {
-  //               question: "Who is LearnPress designed for?",
-  //               options: [
-  //                 "Bloggers",
-  //                 "Educators",
-  //                 "Gamers",
-  //                 "Content Creators",
-  //               ],
-  //               correctAnswer: 1,
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "LearnPress Live Course",
-  //     items: [
-  //       {
-  //         title: "Demo Zoom Meeting Lesson",
-  //         type: "video",
-  //         time: "60 minutes",
-  //       },
-  //       { title: "Demo Google Meet Lesson", type: "video", time: "60 minutes" },
-  //     ],
-  //   },
-  // ];
   useEffect(() => {
+  
     const fetchCourseDetails = async () => {
       try {
-        setLoading(true);
+        const response1 = await axios.get(`http://localhost:8000/instructor/quiz/details/${id}`);
+        const { quizTitle, passingScore, questions } = response1.data;
+
+        setQuizDetails({ quizTitle, passingScore, questions });
+        console.log(response1.data);
+        // setLoading(true);
+
         const response = await fetch(
           `${ENDPOINT}/api/coursedetails/${id}`
         );
         const data = await response.json();
-        console.log(data);
+        const pdf = data.others.curriculum[0].moduleContentUrl[0];
+        setPdf(pdf);
         setCourseDetails(data);
         setModules(data.module || []);
         const firstVideoUrl = data.module[0].items[0].link; // Get the video URL
+        // console.log(data.module);
         setVideo(firstVideoUrl); // Update the video state
       } catch (err) {
         console.log(err)
@@ -161,12 +123,11 @@ function CoursePage() {
         setLoading(false);
       }
     };
-
     fetchCourseDetails();
   }, [id]);
 
   console.log(modules[0].items[0].link);
-  
+
   const totalLessons = modules.reduce(
     (acc, module) => acc + module.items.length,
     0
@@ -270,218 +231,221 @@ function CoursePage() {
     );
   };
   return (
-    <><Header2/>
-    <div className="course-page">
+    <><Header2 />
       <div className="course-header">
         <div className="back-button-2" onClick={() => window.history.back()}>
           <ArrowBack />
         </div>
         <div className="header-title">Introduction LearnPress – LMS Plugin</div>
       </div>
-      <div className="progress-bar">
-        <div
-          className="progress"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
-      <div className="course-container">
-        <div className="course-sidebar">
-          <h2>Curriculum</h2>
-          {modules.map((module, moduleIndex) => (
-            <div key={moduleIndex} className="module">
-              <h3 onClick={() => toggleModule(moduleIndex)}>
-                {module.title}
-                <ExpandMore
-                  className="dropdown-icon"
-                  style={{
-                    transform: openModules.includes(moduleIndex)
-                      ? "rotate(180deg)"
-                      : "",
-                  }}
-                />
-              </h3>
-              <Collapse in={openModules.includes(moduleIndex)}>
-                <ul>
-                  {module.items.map((lesson, lessonIndex) => {
-                    const lessonKey = `${moduleIndex}-${lessonIndex}`;
-                    return (
-                      <li
-                        key={lessonIndex}
-                        className={`lesson ${
-                          completedLessons.includes(lessonKey)
+      <div className="course-page">
+
+        <div className="progress-bar">
+          <div
+            className="progress"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <div className="course-container">
+          <div className="course-sidebar">
+            <h2>Curriculum</h2>
+            {modules.map((module, moduleIndex) => (
+              <div key={moduleIndex} className="module">
+                <h3 onClick={() => toggleModule(moduleIndex)}>
+                  {module.title}
+                  <ExpandMore
+                    className="dropdown-icon"
+                    style={{
+                      transform: openModules.includes(moduleIndex)
+                        ? "rotate(180deg)"
+                        : "",
+                    }}
+                  />
+                </h3>
+                <Collapse in={openModules.includes(moduleIndex)}>
+                  <ul>
+                    {module.items.map((lesson, lessonIndex) => {
+                      const lessonKey = `${moduleIndex}-${lessonIndex}`;
+                      return (
+                        <li
+                          key={lessonIndex}
+                          className={`lesson ${completedLessons.includes(lessonKey)
                             ? "completed"
                             : ""
-                        }`}
-                        onClick={() =>
-                          handleLessonClick(moduleIndex, lessonIndex)
-                        }
-                      >
-                        <span>{lesson.title}</span>
-                        {/* Only show PDF button if the lesson is of type 'video' */}
-                        {lesson.type === "video" && (
-                          <IconButton
-                            color="primary"
-                            onClick={() =>
-                              window.open(
-                                `/download-pdf/${moduleIndex}`,
-                                "_blank"
-                              )
-                            }
-                            title="Download PDF"
-                            size="small"
-                            sx={{
-                              marginLeft: "auto",
-                              color: "#ff9100",
-                              marginRight: "7px",
-                            }} // Add custom styling
-                          >
-                            <PictureAsPdfIcon />
-                          </IconButton>
-                        )}
-                        <span className="lesson-time">{lesson.time}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </Collapse>
-            </div>
-          ))}
-        </div>
-        <div className="course-content">
-          <h2>{currentLesson.title}</h2>
-          {currentLesson.type === "video" && (
-            <>
-              <p>${currentLesson.title} content description...</p>
-                {currentLesson && currentLesson.link ? (
-                  <video controls autoplay name="media">
-                    <source src={currentLesson.link} type="video/mp4" />
-                  </video>
-                ) : (
-                  <p>Loading video...</p>
-                )}
-              <button className="complete-button" onClick={markAsComplete}>
-                {video}
-                Completed
-              </button>
-            </>
-          )}
-          {currentLesson.type === "quiz" && (
-            <>
-              {showInstructions ? (
-                <>
-                  <h3>Quiz Instructions</h3>
-                  <ul className="instruction-page">
-                    <li>Read each question carefully.</li>
-                    <li>
-                      Select the most appropriate answer for each question.
-                    </li>
-                    <li>
-                      You need to answer at least{" "}
-                      {currentLesson.quiz.passingMarks} questions correctly to
-                      pass the quiz.
-                    </li>
-                    <li>
-                      You can navigate through questions using the pagination at
-                      the bottom.
-                    </li>
-                    <li>
-                      Once you've answered all questions, click "Submit Quiz" to
-                      view results.
-                    </li>
-                  </ul>
-                  <button
-                    className="complete-button"
-                    onClick={() => setShowInstructions(false)}
-                  >
-                    Start Quiz
-                  </button>
-                </>
-              ) : (
-                <>
-                  {!showQuizFinalResults ? (
-                    <>
-                      <h3>
-                        {currentLesson.quiz.questions[quizPage - 1].question}
-                      </h3>
-                      <ul className="quiz-options">
-                        {currentLesson.quiz.questions[quizPage - 1].options.map(
-                          (option, index) => (
-                            <li
-                              key={index}
+                            }`}
+                          onClick={() =>
+                            handleLessonClick(moduleIndex, lessonIndex)
+                          }
+                        >
+                          <span>{lesson.title}</span>
+                          {/* Only show PDF button if the lesson is of type 'video' */}
+                          {lesson.type === "video" && (
+                            <IconButton
+                              color="primary"
                               onClick={() =>
-                                handleQuizAnswer(quizPage - 1, index)
+                                window.open(
+                                  `${pdf}`,
+                                  "_blank"
+                                )
                               }
-                              className={`quiz-option ${
-                                quizAnswers[currentLesson.title]?.[
+                              title="Download PDF"
+                              size="small"
+                              sx={{
+                                marginLeft: "auto",
+                                color: "#ff9100",
+                                marginRight: "7px",
+                              }} // Add custom styling
+                            >
+                              <PictureAsPdfIcon />
+                            </IconButton>
+                          )}
+
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Collapse>
+              </div>
+            ))}
+          </div>
+          <div className="course-content">
+            <h2>{currentLesson.title}</h2>
+            {currentLesson.type === "video" && (
+              <>
+                <div className="video-container">
+                  {/* <p>${currentLesson.title} content description...</p> */}
+                  {currentLesson && currentLesson.link ? (
+                    <video controls autoPlay name="media">
+                      <source src={currentLesson.link} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <p>Loading video...</p>
+                  )}
+                </div>
+                <button className="complete-button" onClick={markAsComplete}>
+                  Completed
+                </button>
+              </>
+            )}
+
+            {currentLesson.type === "quiz" && (
+              <>
+                {showInstructions ? (
+                  <>
+                    <h3>Quiz Instructions</h3>
+                    <ul className="instruction-page">
+                      <li>Read each question carefully.</li>
+                      <li>
+                        Select the most appropriate answer for each question.
+                      </li>
+                      <li>
+                        You need to answer at least{" "}
+                        {currentLesson.quiz.passingMarks} questions correctly to
+                        pass the quiz.
+                      </li>
+                      <li>
+                        You can navigate through questions using the pagination at
+                        the bottom.
+                      </li>
+                      <li>
+                        Once you've answered all questions, click "Submit Quiz" to
+                        view results.
+                      </li>
+                    </ul>
+                    <button
+                      className="complete-button"
+                      onClick={() => setShowInstructions(false)}
+                    >
+                      Start Quiz
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {!showQuizFinalResults ? (
+                      <>
+                        <h3>
+                          {currentLesson.quiz.questions[quizPage - 1].question}
+                        </h3>
+                        <ul className="quiz-options">
+                          {currentLesson.quiz.questions[quizPage - 1].options.map(
+                            (option, index) => (
+                              <li
+                                key={index}
+                                onClick={() =>
+                                  handleQuizAnswer(quizPage - 1, index)
+                                }
+                                className={`quiz-option ${quizAnswers[currentLesson.title]?.[
                                   quizPage - 1
                                 ] === index
                                   ? "selected"
                                   : ""
-                              }`}
-                            >
-                              {option}
-                            </li>
-                          )
+                                  }`}
+                              >
+                                {option}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                        <Pagination
+                          count={currentLesson.quiz.questions.length}
+                          page={quizPage}
+                          onChange={handleQuizPageChange}
+                          color="primary"
+                          sx={{
+                            "& .MuiPaginationItem-text": {
+                              color: "#ffffff", // Example color (Tomato) for text
+                            },
+                          }}
+                        />
+                        {quizPage === currentLesson.quiz.questions.length && (
+                          <button
+                            className="complete-button"
+                            onClick={calculateQuizResults}
+                          >
+                            Submit Quiz
+                          </button>
                         )}
-                      </ul>
-                      <Pagination
-                        count={currentLesson.quiz.questions.length}
-                        page={quizPage}
-                        onChange={handleQuizPageChange}
-                        color="primary"
-                        sx={{
-                          "& .MuiPaginationItem-text": {
-                            color: "#ffffff", // Example color (Tomato) for text
-                          },
-                        }}
-                      />
-                      {quizPage === currentLesson.quiz.questions.length && (
-                        <button
-                          className="complete-button"
-                          onClick={calculateQuizResults}
-                        >
-                          Submit Quiz
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <h3>Quiz Results</h3>
-                      <p>
-                        You answered {quizResults} out of{" "}
-                        {currentLesson.quiz.questions.length} questions
-                        correctly.
-                      </p>
-                      {renderQuizResponses()}{" "}
-                      {/* Display student answers with feedback */}
-                      {quizResults < currentLesson.quiz.passingMarks && (
-                        <button className="complete-button" onClick={resetQuiz}>
-                          Retake Quiz
-                        </button>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </>
-          )}
-          <div className="navigation-buttons">
-            <button
-              onClick={navigatePrevious}
-              className={`previous-button ${isFirstLesson ? "hidden" : ""}`}
-            >
-              <ArrowBack /> Previous
-            </button>
-            <button
-              onClick={navigateNext}
-              className={`next-button ${isLastLesson ? "hidden" : ""}`}
-            >
-              Next <ArrowForward />
-            </button>
+                      </>
+                    ) : (
+                      <>
+                        <h3>Quiz Results</h3>
+                        <p>
+                          You answered {quizResults} out of{" "}
+                          {currentLesson.quiz.questions.length} questions
+                          correctly.
+                        </p>
+                        {renderQuizResponses()}{" "}
+                        {/* Display student answers with feedback */}
+                        {quizResults < currentLesson.quiz.passingMarks && (
+                          <button className="complete-button" onClick={resetQuiz}>
+                            Retake Quiz
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+            <div className="navigation-buttons">
+              <button
+                onClick={navigatePrevious}
+                className={`previous-button ${isFirstLesson ? "hidden" : ""}`}
+              >
+                <ArrowBack /> Previous
+              </button>
+              <button
+                onClick={navigateNext}
+                className={`next-button ${isLastLesson ? "hidden" : ""}`}
+              >
+                Next <ArrowForward />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div></>
+      <Footer />
+    </>
   );
 }
 export default CoursePage;

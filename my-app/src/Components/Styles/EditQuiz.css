@@ -6,15 +6,20 @@
   --background-color: #000e3dfb;
 }
 
+.Wrapper {
+  background-color: #000e3dfb;
+}
 .create-quiz-container {
   padding: 40px;
   background-color: var(--background-color);
   color: var(--text-color);
   min-height: 100vh; /* Full viewport height */
-  min-width: auto; /* Full viewport width */
+  width: auto; /* Full viewport width */
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 150px;
+  padding-right: 150px;
   gap: 20px;
 }
 

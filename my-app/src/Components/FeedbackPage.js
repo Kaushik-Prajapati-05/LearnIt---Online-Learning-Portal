@@ -90,12 +90,11 @@ const FeedbackPage = () => {
   };
 
   return (
-    <Wrapper>
-      <Container>
-        <Typography variant="h4" gutterBottom>
+      <Container style={{marginTop: '30px', paddingTop: '30px', backgroundColor: '#1f3064'}}>
+        <Typography variant="h4" gutterBottom style={{color: '#ff6600'}}>
           Course Feedback
         </Typography>
-        <Section>
+        <Section style={{backgroundColor: '#000e3dfb'}}>
         <StyledTextField
           fullWidth
           select
@@ -105,6 +104,7 @@ const FeedbackPage = () => {
           onChange={handleChange}
           variant="outlined"
           margin="normal"
+          style={{backgroundColor: '#000e3dfb'}}
         >
           <MenuItem value="">Select Rating</MenuItem>
           <MenuItem value="1">1 - Poor</MenuItem>
@@ -124,6 +124,7 @@ const FeedbackPage = () => {
           multiline
           rows={4}
           margin="normal"
+          style={{backgroundColor: '#000e3dfb'}}
         />
 
         <SubmitButton variant="contained" onClick={handleSubmit}>
@@ -137,7 +138,6 @@ const FeedbackPage = () => {
         </Snackbar>
         </Section>
       </Container>
-    </Wrapper>
   );
 };
 

@@ -37,10 +37,6 @@ mongoose.connect('mongodb+srv://parvpatel20804:Parv1234@cluster0.fw8ji.mongodb.n
 .catch((error) => console.log('MongoDB connection error: ', error));
 
 
-
-
-
-
 app.use(express.json());
   
 //routes
