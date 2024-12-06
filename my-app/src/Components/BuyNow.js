@@ -3,7 +3,7 @@ import "./Styles/BuyNow.css";
 import { FaLinkedin } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import Header2 from "./HeaderAfterSignIn";
-
+import Footer from "./Footer";
 
 const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
 
@@ -115,9 +115,6 @@ function BuyNow() {
             />
             <div className="learnit-course-info-2">
               <p>
-                <strong>📅</strong> Published On : {courses.date}
-              </p>
-              <p>
                 <strong>🧑‍🎓</strong> Enrolled Students :{" "}
                 {courses.students?.length || 0}
               </p>
@@ -176,9 +173,9 @@ function BuyNow() {
               <div className="learnit-tab-content-2">
                 <p>{courses.description}</p>
                 <div className="learnit-feature-box-2">
-                  <h3>In This Free Course, You Will Learn How To</h3>
+                  <h3>Course Objectives:</h3>
                   <ul>
-                    <li>{courses.objectives}</li>
+                    <li>{courses.welcomeMessage || "No objectives provided."}</li>
                   </ul>
                 </div>
               </div>
@@ -216,6 +213,7 @@ function BuyNow() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

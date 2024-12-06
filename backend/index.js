@@ -20,6 +20,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// app.use(cors({
+//   origin: 'http://localhost:3000', 
+//   origin: 'https://learn-it-online-learning-portal.vercel.app', 
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
 
 
 //database connection
@@ -29,10 +35,6 @@ mongoose.connect('mongodb+srv://parvpatel20804:Parv1234@cluster0.fw8ji.mongodb.n
 })
 .then(() => console.log('MongoDB connected successfully'))
 .catch((error) => console.log('MongoDB connection error: ', error));
-
-
-
-
 
 
 app.use(express.json());

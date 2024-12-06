@@ -13,9 +13,9 @@ import { NavigateBefore } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Styles/EditQuiz.css';
 import axios from 'axios';
-
-
-const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+import Footer from './Footer';
+import Header from './Header';
+const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
 const EditQuiz = () => {
   const navigate = useNavigate();
@@ -32,9 +32,9 @@ const EditQuiz = () => {
     const fetchQuizDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/instructor/quiz/details/${id}`);
-        const { quizTitle,passingScore, questions } = response.data;
-
-        setQuizDetails({ quizTitle,passingScore, questions });
+        const { quizTitle, passingScore, questions } = response.data;
+        console.log(response.data);
+        setQuizDetails({ quizTitle, passingScore, questions });
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch quiz details.');
@@ -77,7 +77,7 @@ const EditQuiz = () => {
   };
 
   const handleSaveQuiz = async () => {
-    if (!quizDetails.quizTitle||!quizDetails.passingScore || quizDetails.questions.length === 0) {
+    if (!quizDetails.quizTitle || !quizDetails.passingScore || quizDetails.questions.length === 0) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -101,11 +101,14 @@ const EditQuiz = () => {
   }
 
   return (
-    <Box className="create-quiz-container">
-      <div className="title">Edit Quiz</div>
-        
-        {/* Quiz Title */}
-        <TextField
+    <>
+      <Header />
+      <div className='Wrapper'>
+        <Box className="create-quiz-container">
+          <div className="title">Edit Quiz</div>
+
+          {/* Quiz Title */}
+          <TextField
             label="Quiz Title"
             variant="outlined"
             fullWidth
@@ -128,9 +131,9 @@ const EditQuiz = () => {
               '& .MuiInputBase-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
             }}
           />
-    
-        {/* Passing Score */}
-        
+
+          {/* Passing Score */}
+
           <TextField
             label="Passing Score (%)"
             variant="outlined"
@@ -155,39 +158,18 @@ const EditQuiz = () => {
             }}
           />
 
-      {/* Questions Section */}
-      <Box className="questions-section">
-        {quizDetails.questions.map((question, questionIndex) => (
-          <Box key={questionIndex} className="question-container">
-            <TextField
-              label={`Question ${questionIndex + 1}`}
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={2}
-              value={question.questionText}
-              onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: '#ff9100' },
-                  '&:hover fieldset': { borderColor: '#ff5e00' },
-                  '&.Mui-focused fieldset': { borderColor: '#ff5e00' },
-                },
-                '& .MuiInputLabel-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
-                '& .MuiInputBase-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
-              }}
-            />
-            <Box className="options-section">
-              {question.options.map((option, optionIndex) => (
+          {/* Questions Section */}
+          <Box className="questions-section">
+            {quizDetails.questions.map((question, questionIndex) => (
+              <Box key={questionIndex} className="question-container">
                 <TextField
-                  key={optionIndex}
-                  label={`Option ${optionIndex + 1}`}
+                  label={`Question ${questionIndex + 1}`}
                   variant="outlined"
                   fullWidth
-                  value={option}
-                  onChange={(e) =>
-                    handleOptionChange(questionIndex, optionIndex, e.target.value)
-                  }
+                  multiline
+                  rows={2}
+                  value={question.questionText}
+                  onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       '& fieldset': { borderColor: '#ff9100' },
@@ -198,114 +180,141 @@ const EditQuiz = () => {
                     '& .MuiInputBase-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
                   }}
                 />
-              ))}
-            </Box>
+                <Box className="options-section">
+                  {question.options.map((option, optionIndex) => (
+                    <TextField
+                      key={optionIndex}
+                      label={`Option ${optionIndex + 1}`}
+                      variant="outlined"
+                      fullWidth
+                      value={option}
+                      onChange={(e) =>
+                        handleOptionChange(questionIndex, optionIndex, e.target.value)
+                      }
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': { borderColor: '#ff9100' },
+                          '&:hover fieldset': { borderColor: '#ff5e00' },
+                          '&.Mui-focused fieldset': { borderColor: '#ff5e00' },
+                        },
+                        '& .MuiInputLabel-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
+                        '& .MuiInputBase-root': { color: 'white', fontWeight: 'bold', fontFamily: 'Poppins' },
+                      }}
+                    />
+                  ))}
+                </Box>
 
-            <Box className="correct-answer-section">
-  <Typography variant="h6" className="correct-answer-label" sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Poppins',
-    marginBottom: '10px', textAlign: 'center', // Space between the label and radio buttons
-  }}>
-    Correct Answer
-  </Typography>
-  <RadioGroup
-    value={question.correctAnswer}
-    onChange={(e) => handleCorrectAnswerChange(questionIndex, e.target.value)}
-    row
-    sx={{
-      display: 'flex',
-      justifyContent: 'space-evenly', // Space the options evenly
-    }}
-  >
-    {question.options.map((option, index) => (
-      <FormControlLabel
-        key={index}
-        value={index.toString()} // Correct answer should be stored as a string
-        control={<Radio sx={{ color: 'white' }} />}
-        label={<span style={{ color: 'white', fontWeight: 'bold' }}>{`Option ${index + 1}`}</span>}
-        sx={{
-          color: 'white',
-          '& .MuiFormControlLabel-label': {
-            fontWeight: 'bold', // Increase font weight for labels
-          },
-          marginRight: '10px', // Space between radio buttons
-        }}
-      />
-    ))}
-  </RadioGroup>
-</Box>
+                <Box className="correct-answer-section">
+                  <Typography variant="h6" className="correct-answer-label" sx={{
+                    color: 'white', fontWeight: 'bold', fontFamily: 'Poppins',
+                    marginBottom: '10px', textAlign: 'center', // Space between the label and radio buttons
+                  }}>
+                    Correct Answer
+                  </Typography>
+                  <RadioGroup
+                    value={question.correctAnswer}
+                    onChange={(e) => handleCorrectAnswerChange(questionIndex, e.target.value)}
+                    row
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-evenly', // Space the options evenly
+                    }}
+                  >
+                    {question.options.map((option, index) => (
+                      <FormControlLabel
+                        key={index}
+                        value={index.toString()} // Correct answer should be stored as a string
+                        control={<Radio sx={{ color: 'white' }} />}
+                        label={<span style={{ color: 'white', fontWeight: 'bold' }}>{`Option ${index + 1}`}</span>}
+                        sx={{
+                          color: 'white',
+                          '& .MuiFormControlLabel-label': {
+                            fontWeight: 'bold', // Increase font weight for labels
+                          },
+                          marginRight: '10px', // Space between radio buttons
+                        }}
+                      />
+                    ))}
+                  </RadioGroup>
+                </Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => handleRemoveQuestion(questionIndex)}
+                  className="remove-question-btn"
+                  sx={{
+                    color: 'white',
+                    backgroundColor: '#ff5e00',
+                    '&:hover': { backgroundColor: '#ff9100' },
+                    alignSelf: 'center', // To center the button
+
+                  }}
+                >
+                  Remove Question
+                </Button>
+              </Box>
+            ))}
+
             <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleRemoveQuestion(questionIndex)}
-              className="remove-question-btn"
+              variant="outlined"
+              onClick={handleAddQuestion}
+              startIcon={<AddCircleOutlineIcon />}
+              className="add-question-btn"
               sx={{
                 color: 'white',
                 backgroundColor: '#ff5e00',
                 '&:hover': { backgroundColor: '#ff9100' },
-            alignSelf: 'center', // To center the button
-
+                alignSelf: 'center', // To center the button
               }}
             >
-              Remove Question
+              Add Question
+            </Button>
+
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between', // To position buttons on left and right
+              width: '100%',
+              padding: '20px', // Optional padding for spacing
+            }}
+          >
+            {/* Back Button */}
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/instructor-dashboard')}
+              startIcon={<NavigateBefore />}
+              sx={{
+                color: 'white',
+                backgroundColor: '#ff9100',
+                '&:hover': { backgroundColor: '#ff5e00' },
+                marginTop: '25px',
+                height: '55px'
+              }}
+            >
+              Back to Dashboard
+            </Button>
+
+            {/* Save Quiz Button */}
+            <Button
+              variant="contained"
+              onClick={handleSaveQuiz}
+              className="save-btn"
+              sx={{
+                color: 'white',
+                backgroundColor: '#ff5e00',
+                '&:hover': { backgroundColor: '#ff9100' },
+              }}
+            >
+              Save Quiz
             </Button>
           </Box>
-        ))}
-        
-            <Button
-          variant="outlined"
-          onClick={handleAddQuestion}
-          startIcon={<AddCircleOutlineIcon />}
-          className="add-question-btn"
-          sx={{
-            color: 'white',
-            backgroundColor: '#ff5e00',
-            '&:hover': { backgroundColor: '#ff9100' },
-            alignSelf: 'center', // To center the button
-          }}
-        >
-          Add Question
-        </Button>
-          
-      </Box>
 
-      <Box
-  sx={{
-    display: 'flex',
-    justifyContent: 'space-between', // To position buttons on left and right
-    width: '100%',
-    padding: '20px', // Optional padding for spacing
-  }}
->
-  {/* Back Button */}
-  <Button
-    variant="outlined"
-    onClick={() => navigate('/instructor-dashboard')}
-    startIcon={<NavigateBefore />}
-    sx={{
-        color: 'white',
-        backgroundColor: '#ff5e00',
-        '&:hover': { backgroundColor: '#ff9100' },
-      }}
-  >
-    Back to Dashboard
-  </Button>
-
-  {/* Save Quiz Button */}
-    <Button
-    variant="contained"
-    onClick={handleSaveQuiz}
-    className="save-btn"
-    sx={{
-        color: 'white',
-        backgroundColor: '#ff5e00',
-        '&:hover': { backgroundColor: '#ff9100' },
-      }}
-  >
-    Save Quiz
-  </Button>
-</Box>
-
-    </Box>
+        </Box>
+      </div>
+      <Footer />
+    </>
   );
 };
 

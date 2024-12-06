@@ -16,11 +16,11 @@ body, .learnit-container-2 {
   background: #000f41;
   color: #ff6600;
   text-align: center;
-  padding: 20px 10px;
+  padding: 10px 10px;
 }
 
 .learnit-header-2 h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
 }
@@ -29,11 +29,12 @@ body, .learnit-container-2 {
 .learnit-main-content-2 {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
-  padding: 30px;
+  gap: 20px;
+  padding: 20px;
   flex: 1;
   width: 100%;
   box-sizing: border-box;
+  background-color: #1f3064;
 }
 
 /* Sidebar */
@@ -44,6 +45,7 @@ body, .learnit-container-2 {
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
+  width: 500px;
 }
 
 .learnit-video-2 iframe {
@@ -117,7 +119,7 @@ body, .learnit-container-2 {
 /* Tab Content */
 .learnit-tab-content-2 {
   padding: 20px;
-  background-color: #001443;
+  background-color: #000f41;
   border-radius: 8px;
   overflow-y: auto; /* Prevent content overflow */
   min-height: 400px; /* Ensure content takes consistent space */
@@ -132,6 +134,7 @@ body, .learnit-container-2 {
   margin-bottom: 25px;
   padding-top: 20px;
   margin-top: 20px;
+  padding-left: 35px;
 }
 
 .learnit-feature-box-2 h3 {

@@ -4,8 +4,9 @@ import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 
 import Header2 from "./HeaderAfterSignIn";
-
-const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+import Footer from "./Footer";
+import FeedbackPage from "./FeedbackPage";
+const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
 
 
@@ -47,15 +48,16 @@ function StartLearning() {
     navigate(`/learnCourse/${id}`);
   };
   const showTab = (tabId) => setActiveTab(tabId);
-// console.log(courses);
+  // console.log(courses);
   return (
     <>
       <Header2 />
+      <div className="course-header-2">
+        <h1>{courses.title || "Course Title"}</h1>
+      </div>
       <div className="course-container-2">
         {/* Header */}
-        <div className="course-header-2">
-          <h1>{courses.title || "Course Title"}</h1>
-        </div>
+
 
         {/* Main Content */}
         <div className="course-main-content-2">
@@ -103,28 +105,32 @@ function StartLearning() {
             {/* Tabs */}
             <div className="course-tabs-2">
               <div
-                className={`course-tab-2 ${
-                  activeTab === "description" ? "course-tab-active-2" : ""
-                }`}
+                className={`course-tab-2 ${activeTab === "description" ? "course-tab-active-2" : ""
+                  }`}
                 onClick={() => showTab("description")}
               >
                 Description
               </div>
               <div
-                className={`course-tab-2 ${
-                  activeTab === "curriculum" ? "course-tab-active-2" : ""
-                }`}
+                className={`course-tab-2 ${activeTab === "curriculum" ? "course-tab-active-2" : ""
+                  }`}
                 onClick={() => showTab("curriculum")}
               >
                 Curriculum
               </div>
               <div
-                className={`course-tab-2 ${
-                  activeTab === "instructor" ? "course-tab-active-2" : ""
-                }`}
+                className={`course-tab-2 ${activeTab === "instructor" ? "course-tab-active-2" : ""
+                  }`}
                 onClick={() => showTab("instructor")}
               >
                 Instructor
+              </div>
+              <div
+                className={`course-tab-2 ${activeTab === "feedback" ? "course-tab-active-2" : ""
+                  }`}
+                onClick={() => showTab("feedback")}
+              >
+                Feedback
               </div>
             </div>
 
@@ -135,7 +141,7 @@ function StartLearning() {
                 <div className="course-feature-box-2">
                   <h3>In This Course, You Will Learn:</h3>
                   <ul>
-                    <li>{courses.objectives || "No objectives provided."}</li>
+                    <li>{courses.welcomeMessage || "No objectives provided."}</li>
                   </ul>
                 </div>
               </div>
@@ -193,9 +199,14 @@ function StartLearning() {
                 </div>
               </div>
             )}
+
+            {activeTab === "feedback" && (
+              <FeedbackPage />
+            )}
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

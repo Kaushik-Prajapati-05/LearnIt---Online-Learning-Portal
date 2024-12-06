@@ -4,7 +4,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #2d3a6a;
+  background-color: #1f3064;
   color: #f4f4f4;
   line-height: 1.6;
   display: flex;
@@ -14,16 +14,16 @@ body {
 
 /* Header */
 .course-header-2 {
-  background-color: #1e2a47;
+  background-color: #000e3dfb;
   color: #ff6600;
   text-align: center;
-  padding: 20px;
-  border-bottom: 3px solid #ff6600;
+  padding: 10px;
+  /* border-bottom: 3px solid #ff6600; */
 }
 
 .course-header-2 h1 {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -31,7 +31,10 @@ body {
 .course-container-2 {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  flex-wrap: wrap;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   min-height: 100vh; /* Ensure container takes at least full viewport height */
   width: 100%; /* Ensure the container takes the full width */
   box-sizing: border-box; /* Make sure padding doesn't affect width */
@@ -40,7 +43,7 @@ body {
 /* Main Content */
 .course-main-content-2 {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* Sidebar and content */
+  grid-template-columns: 1fr 3.5fr; /* Sidebar and content */
   gap: 20px;
   margin-top: 20px;
   flex: 1; /* Make sure content area grows to fill available space */
@@ -49,7 +52,7 @@ body {
 
 /* Sidebar */
 .course-sidebar-2 {
-  background-color: #1e2a47;
+  background-color: #000e3dfb;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -88,7 +91,7 @@ body {
 
 /* Main Content */
 .course-content-2 {
-  background-color: #1e2a47;
+  background-color: #000e3dfb;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -134,6 +137,7 @@ body {
   padding: 15px;
   margin-top: 10px;
   width: 100%; /* Ensure feature box takes full width */
+  padding-left: 30px;
 }
 
 .course-feature-box-2 h3 {
