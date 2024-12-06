@@ -28,7 +28,7 @@ function CoursePage() {
 
   const [video,setVideo] = useState(""); 
   const [courseDetails, setCourseDetails] = useState([]); // Holds the course details fetched from the API
-  const [modules1, setModules] = useState([
+  const [modules, setModules] = useState([
     {
       title: "LearnPress Getting Started",
       items: [
@@ -86,61 +86,61 @@ function CoursePage() {
   const [loading, setLoading] = useState(true); // Indicates if data is being loaded
   const [error, setError] = useState(null); // Stores any error message during API fetching
 
-  const modules = [
-    {
-      title: "LearnPress Getting Started",
-      items: [
-        { title: "What is LearnPress?", type: "video", time: "20 minutes" },
-        { title: "How to use LearnPress?", type: "video", time: "60 minutes" },
-        {
-          title: "Demo the Quiz of LearnPress",
-          type: "quiz",
-          time: "10 minutes",
-          quiz: {
-            passingMarks: 2,
-            questions: [
-              {
-                question: "What is the primary purpose of LearnPress?",
-                options: [
-                  "Online Learning",
-                  "Cooking",
-                  "Shopping",
-                  "Traveling",
-                ],
-                correctAnswer: 0,
-              },
-              {
-                question: "What language is LearnPress built on?",
-                options: ["JavaScript", "Python", "PHP", "Ruby"],
-                correctAnswer: 2,
-              },
-              {
-                question: "Who is LearnPress designed for?",
-                options: [
-                  "Bloggers",
-                  "Educators",
-                  "Gamers",
-                  "Content Creators",
-                ],
-                correctAnswer: 1,
-              },
-            ],
-          },
-        },
-      ],
-    },
-    {
-      title: "LearnPress Live Course",
-      items: [
-        {
-          title: "Demo Zoom Meeting Lesson",
-          type: "video",
-          time: "60 minutes",
-        },
-        { title: "Demo Google Meet Lesson", type: "video", time: "60 minutes" },
-      ],
-    },
-  ];
+  // const modules = [
+  //   {
+  //     title: "LearnPress Getting Started",
+  //     items: [
+  //       { title: "What is LearnPress?", type: "video", time: "20 minutes" },
+  //       { title: "How to use LearnPress?", type: "video", time: "60 minutes" },
+  //       {
+  //         title: "Demo the Quiz of LearnPress",
+  //         type: "quiz",
+  //         time: "10 minutes",
+  //         quiz: {
+  //           passingMarks: 2,
+  //           questions: [
+  //             {
+  //               question: "What is the primary purpose of LearnPress?",
+  //               options: [
+  //                 "Online Learning",
+  //                 "Cooking",
+  //                 "Shopping",
+  //                 "Traveling",
+  //               ],
+  //               correctAnswer: 0,
+  //             },
+  //             {
+  //               question: "What language is LearnPress built on?",
+  //               options: ["JavaScript", "Python", "PHP", "Ruby"],
+  //               correctAnswer: 2,
+  //             },
+  //             {
+  //               question: "Who is LearnPress designed for?",
+  //               options: [
+  //                 "Bloggers",
+  //                 "Educators",
+  //                 "Gamers",
+  //                 "Content Creators",
+  //               ],
+  //               correctAnswer: 1,
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "LearnPress Live Course",
+  //     items: [
+  //       {
+  //         title: "Demo Zoom Meeting Lesson",
+  //         type: "video",
+  //         time: "60 minutes",
+  //       },
+  //       { title: "Demo Google Meet Lesson", type: "video", time: "60 minutes" },
+  //     ],
+  //   },
+  // ];
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
@@ -152,9 +152,8 @@ function CoursePage() {
         console.log(data);
         setCourseDetails(data);
         setModules(data.module || []);
-        setVideo(data.module[0].items[0].link)
-        // setVideo(data.curriculum[1].moduleVideoUrl)
-        // console.log(data.curriculum || [])
+        const firstVideoUrl = data.module[0].items[0].link; // Get the video URL
+        setVideo(firstVideoUrl); // Update the video state
       } catch (err) {
         console.log(err)
         setError(err.message);
@@ -274,7 +273,7 @@ function CoursePage() {
     <><Header2/>
     <div className="course-page">
       <div className="course-header">
-        <div className="back-button" onClick={() => window.history.back()}>
+        <div className="back-button-2" onClick={() => window.history.back()}>
           <ArrowBack />
         </div>
         <div className="header-title">Introduction LearnPress – LMS Plugin</div>
@@ -352,14 +351,17 @@ function CoursePage() {
           <h2>{currentLesson.title}</h2>
           {currentLesson.type === "video" && (
             <>
-              <p>{`${currentLesson.title} content description...`}</p>
-              <video controls className="module-video">
-                <source src={video} altr="adasd" type="video/mp4" />
-              </video>
+              <p>${currentLesson.title} content description...</p>
+                {currentLesson && currentLesson.link ? (
+                  <video controls autoplay name="media">
+                    <source src={currentLesson.link} type="video/mp4" />
+                  </video>
+                ) : (
+                  <p>Loading video...</p>
+                )}
               <button className="complete-button" onClick={markAsComplete}>
-                {/* Mark as complete */}
                 {video}
-                {/* {modules1[1].items.length ? modules1[1].items.link :"LLL" } */}
+                Completed
               </button>
             </>
           )}
@@ -383,7 +385,7 @@ function CoursePage() {
                       the bottom.
                     </li>
                     <li>
-                      Once you’ve answered all questions, click "Submit Quiz" to
+                      Once you've answered all questions, click "Submit Quiz" to
                       view results.
                     </li>
                   </ul>

@@ -4,11 +4,11 @@
     justify-content: center;
     align-items: center;
     min-height: fit-content; /* Ensures full viewport height */
-    background-color: #f0f4f8; /* Light background for the page */
+    background-color: #f0f4f8; 
   }
   
   h2 {
-    color: #ff9100;
+    color: #ff5e00;
     text-align: center;
     font-size: 2rem;
     padding-bottom: 10px;
@@ -20,7 +20,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: #000e3dfb; /* White background for profile container */
+    background-color: #000e3dfb; 
     border-radius: 2px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Soft shadow around the container */
     padding: 30px;
@@ -30,18 +30,18 @@
   /* Center the profile image inside the container */
   .profile-image {
     display: flex;
-    justify-content: center; /* Horizontally center the image */
-    align-items: center; /* Vertically center the image */
-    flex-direction: column; /* Ensures the input button stays below the image */
-    margin-bottom: 20px; /* Adds some space below the image */
-    margin-top: 20px; /* Adds some space above the image */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; 
+    margin-bottom: 20px;
+    margin-top: 20px;
   }
   
   .avatar img {
-    width: 120px; /* Set a fixed width for the image */
-    height: 120px; /* Set a fixed height for the image */
-    border-radius: 50%; /* Make the image round */
-    object-fit: cover; /* Ensure the image covers the circle without distortion */
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%; 
+    object-fit: cover;
   }
   
   /* Form Styling */
@@ -77,9 +77,9 @@
     background-color: #000e3dfb;
     color: #ffffff;
     transition: border-color 0.3s;
-    resize: vertical; /* Allow vertical resizing */
-    min-height: 40px; /* Adjust the height */
-    max-height: 150px; /* Adjust max height if needed */
+    resize: vertical; 
+    min-height: 40px; 
+    max-height: 150px; 
   }
   
   .form-group input:focus,
@@ -99,13 +99,12 @@
     border-radius: 8px;
     cursor: pointer;
     border: none;
-    transition: transform 0.3s ease; /* Transition only for the transform effect */
+    transition: transform 0.3s ease; 
   }
   
-  /* Remove any unwanted color change or background color on hover */
   .save-button:hover {
-    transform: translateY(-2px); /* Only the translation effect */
-    background-color: #ff5e00; /* Keep the same background color on hover */
+    transform: translateY(-2px); 
+    background-color: #ff5e00;
   }
   
   
@@ -120,11 +119,12 @@
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s; /* Removed background-color transition */
+    transition: transform 0.3s; 
   }
   
   .img-upload-button:hover {
-    transform: translateY(-2px); /* Only translation effect */
+    transform: translateY(-2px); 
+    background-color: #ff5e00;
   }
 
   
@@ -164,7 +164,6 @@
   }
   
   .password-eye-icon {
-    margin-left: -30px; /* Adjust the icon position */
+    margin-left: -30px; 
     cursor: pointer;
   }
-  

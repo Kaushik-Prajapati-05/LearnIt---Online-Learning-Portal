@@ -16,11 +16,11 @@ body, .learnit-container-2 {
   background: #000f41;
   color: #ff6600;
   text-align: center;
-  padding: 20px 10px;
+  padding: 10px 10px;
 }
 
 .learnit-header-2 h1 {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
 }

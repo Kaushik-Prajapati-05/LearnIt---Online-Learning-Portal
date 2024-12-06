@@ -20,6 +20,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// app.use(cors({
+//   origin: 'http://localhost:3000', 
+//   origin: 'https://learn-it-online-learning-portal.vercel.app', 
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
 
 
 //database connection

@@ -177,7 +177,7 @@ body {
 
 .courses-container {
     display: grid;
-    margin-inline: 10%;
+    margin-inline: 5%;
     grid-template-columns: repeat(auto-fill, minmax(250px, 0.5fr)); /* Adjusted width */
     gap: 15px;
     margin-top: 20px;

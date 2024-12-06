@@ -64,7 +64,7 @@ function Register({ onClose, onLogin }) {
     }
 
     try {
-      const response = await fetch(`{ENDPOINT}/auth/register`, {
+      const response = await fetch(`${ENDPOINT}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
