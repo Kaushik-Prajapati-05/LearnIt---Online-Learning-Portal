@@ -32,6 +32,9 @@ const CreateCourse = () => {
     isPublished: false, // Added default for isPublished
   });
 
+  
+  const [imaage,setImaage] = useState();
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const [modules, setModules] = useState([]);
@@ -100,6 +103,7 @@ const CreateCourse = () => {
       if (response.ok) { // Check that url exists in the response
         console.log('Course image uploaded successfully:', result.data);
         setCourseDetails({ ...courseDetails, image: result.data });
+        return result.data;
       } else {
         console.error('Failed to upload course image:', result.message);
       }
@@ -142,9 +146,9 @@ const CreateCourse = () => {
     }
 
     // Upload the course image if it exists
-    if (courseDetails.courseImage) {
-      await uploadCourseImage(courseDetails.courseImage);
-    }
+    // if (courseDetails.courseImage) {
+    //   await uploadCourseImage(courseDetails.courseImage);
+    // }
 
     // Upload files for each module (content and video)
     for (const module of modules) {
@@ -158,7 +162,7 @@ const CreateCourse = () => {
       }
     }
 
-    const courseData = {
+    var courseData = {
       instructorId: userInfo._id, // Example: dynamically set based on logged-in user
       instructorName: userInfo.userName, // Example: dynamically set based on logged-in user
       title: courseDetails.title,
@@ -174,6 +178,16 @@ const CreateCourse = () => {
       curriculum: modules, // Include modules with updated URLs
       isPublished: courseDetails.isPublished, // Ensure isPublished is set
     };
+
+    
+    if (courseDetails.courseImage) {
+      const uploadedImage = await uploadCourseImage(courseDetails.courseImage);
+      // console.log(uploadedImage); 
+       courseData = {
+        ...courseDetails,
+        image: uploadedImage,
+      };
+    }
 
 
     try {
