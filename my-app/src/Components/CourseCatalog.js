@@ -57,7 +57,7 @@ function CourseCatalog() {
   return (
     <div className="course-catalog">
     <div className="categories">
-  {["All", "Web Development", "Machine Learning", "Data Science"].map(category => (
+  {["All", "Photography", "IT", "Developer", "Marketing"].map(category => (
     <h2
       key={category}
       className={`category ${selectedCategory === category ? "active" : ""}`}

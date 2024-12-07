@@ -203,42 +203,6 @@ body, .learnit-container-2 {
   margin: 8px 0;
 }
 
-.learnit-linkedin-link-2 {
-  color: #0077b5;
-  font-size: 2rem;
-  margin-top: 20px;
-  display: inline-block;
-}
-
-.learnit-linkedin-link-2:hover {
-  color: #66a9d9;
-}
-
-/* Leaderboard */
-.learnit-leaderboard-2 {
-  background-color: #1f1f1f;
-  padding: 20px;
-  border-radius: 12px;
-}
-
-.learnit-leaderboard-title-2 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #ff6600;
-}
-
-.learnit-leaderboard-row-2 {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px;
-  border-bottom: 1px solid #333;
-}
-
-.learnit-leaderboard-row-2:hover {
-  background-color: #333;
-}
-
 /* Rating Section */
 .learnit-rating-section-2 {
   font-size: 1.6rem;

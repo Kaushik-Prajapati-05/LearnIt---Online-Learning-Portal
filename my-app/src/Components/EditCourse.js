@@ -122,21 +122,40 @@ const EditCourse = ({ courseData }) => {
   };
 
   const handleSubmit = async () => {
-    // Check if all required fields are filled out
+
     if (
       !courseDetails.title ||
       !courseDetails.category ||
       !courseDetails.level ||
-      !courseDetails.description ||
       !courseDetails.pricing
     ) {
       alert("Please fill all the required fields.");
       return 0;
     }
 
-    else if (courseDetails.pricing < 0) {
-      alert("Price of the course must be non-zero integer.");
-      return 0;
+    if (courseDetails.title.length > 100) {
+      alert('title can contain at max 100 charectors.');
+      return;
+    }
+
+    if (courseDetails.subtitle.length > 150) {
+      alert('subtitle can contain at max 150 charectors.');
+      return;
+    }
+
+    if (courseDetails.welcomeMessage.length > 200) {
+      alert('welcome message can contain at max 200 charectors.');
+      return;
+    }
+
+    if (courseDetails.pricing > 99999) {
+      alert('Course price can not exceed 99999rs.');
+      return;
+    }
+
+    if (courseDetails.pricing < 0) {
+      alert('Course price can not be negative.');
+      return;
     }
 
     // Prepare data for submission
@@ -581,7 +600,7 @@ const EditCourse = ({ courseData }) => {
                         Select Module Type
                       </MenuItem>
                       <MenuItem value="lecture">Lecture</MenuItem>
-                      <MenuItem value="quiz">Quiz</MenuItem>
+                      {/* <MenuItem value="quiz">Quiz</MenuItem> */}
                     </Select>
                   </FormControl>
                   {module.moduleType === "lecture" && (

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Styles/BuyNow.css";
 import { FaLinkedin } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
+import Header from "./Header";
 import Header2 from "./HeaderAfterSignIn";
 import Footer from "./Footer";
 
@@ -16,6 +17,7 @@ function BuyNow() {
   const [activeTab, setActiveTab] = useState("description");
   const [openSections, setOpenSections] = useState({});
   const token = localStorage.getItem("accessToken");
+  const isLoggedIn = localStorage.getItem("accessToken") !== null;
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   console.log(id);
   const handleBuyNow = () => {
@@ -97,7 +99,7 @@ function BuyNow() {
 // console.log(courses.others);
   return (
     <>
-      <Header2 />
+      {isLoggedIn ? <Header2 /> : <Header />}
       <div className="learnit-container-2">
         {/* Header */}
         <header className="learnit-header-2">
@@ -198,15 +200,7 @@ function BuyNow() {
                   <p>👉 Students taught: {courses.taughtStudents}+</p>
                   <p>👉 Total courses offered: {courses.offeredCourses}</p>
                   <p>👉 Rating: {courses.rating}</p>
-
-                  <a
-                    href={courses.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="linkedin-link-2"
-                  >
-                    <FaLinkedin size={30} className="linkedin-icon-2" />
-                  </a>
+                   
                 </div>
               </div>
             )}

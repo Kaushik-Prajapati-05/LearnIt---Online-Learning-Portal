@@ -20,9 +20,19 @@ const EditProfile = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // State for confirm password visibility
   const navigate = useNavigate(); 
   
+  const validateUsername = (username) => {
+    const usernameRegex = /^.{1,12}$/;
+    return usernameRegex.test(username);
+  };
+
   const handleSave = async () => {
+    if (!validateUsername(username)) {
+      setError("Username can contain at max 12 cheracters");
+      return;
+    }
+
     if (!validateEmail(email)) {
-      setError("Invalid email format. Email should contain '@' with characters before and after.");
+      setError("Wrong email format.");
       return;
     }
   

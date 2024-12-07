@@ -15,7 +15,7 @@ const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
 function CoursePage() {
   const { id } = useParams();
-  const {quizId} = useParams();
+  const { quizId } = useParams();
   const navigate = useNavigate();
   const [completedLessons, setCompletedLessons] = useState([]);
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
@@ -38,91 +38,117 @@ function CoursePage() {
 
   const [modules, setModules] = useState([
     {
-      title: "LearnPress Getting Started",
+      title: "LearnIt Getting Started",
       items: [
-        { title: "What is LearnPress?", type: "video", time: "20 minutes" },
-        { title: "How to use LearnPress?", type: "video", time: "60 minutes" },
+        { title: "What is Python", type: "video" },
+        { title: "How to use python", type: "video" },
         {
-          title: "Demo the Quiz of LearnPress",
+          title: "Python Quiz",
           type: "quiz",
-          time: "10 minutes",
           quiz: {
             passingMarks: 2,
             questions: [
               {
-                question: "What is the primary purpose of LearnPress?",
+                question: "What is Python?",
                 options: [
-                  "Online Learning",
-                  "Cooking",
-                  "Shopping",
-                  "Traveling",
+                  "Programming Language",
+                  "Markup Language",
+                  "Assmbly Language",
+                  "Low Level Language",
                 ],
                 correctAnswer: 0,
               },
               {
-                question: "What language is LearnPress built on?",
-                options: ["JavaScript", "Python", "PHP", "Ruby"],
+                question: "Which keyword is used to define a function in Python?",
+                options: ["function", "void", "def", "define"],
                 correctAnswer: 2,
-              },
-              {
-                question: "Who is LearnPress designed for?",
-                options: [
-                  "Bloggers",
-                  "Educators",
-                  "Gamers",
-                  "Content Creators",
-                ],
-                correctAnswer: 1,
               },
             ],
           },
         },
       ],
-    },
-    {
-      title: "LearnPress Live Course",
-      items: [
-        {
-          title: "Demo Zoom Meeting Lesson",
-          type: "video",
-          time: "60 minutes",
-        },
-        { title: "Demo Google Meet Lesson", type: "video", time: "60 minutes" },
-      ],
-    },
-  ]); // Stores the course curriculum (modules)
+    }
+  ]);
+
+  // Stores the course curriculum (modules)
+
   const [loading, setLoading] = useState(true); // Indicates if data is being loaded
   const [error, setError] = useState(null); // Stores any error message during API fetching
 
   useEffect(() => {
-  
+    // const fetchQuizDetails = async () => {
+    //   try {
+    //     const response = await axios.get(`http://localhost:8000/student/course/quiz/${id}`);
+    //     const { quizTitle, passingScore, questions } = response.data;
+    //     console.log(response.data);
+    //     setQuizDetails({ quizTitle, passingScore, questions });
+    //     setLoading(false);
+    //   } catch (err) {
+    //     setError('Failed to fetch quiz details.');
+    //     setLoading(false);
+    //   }
+    // };
+
+    // fetchQuizDetails();
     const fetchCourseDetails = async () => {
       try {
-        const response1 = await axios.get(`http://localhost:8000/instructor/quiz/details/${id}`);
-        const { quizTitle, passingScore, questions } = response1.data;
-
-        setQuizDetails({ quizTitle, passingScore, questions });
-        console.log(response1.data);
-        // setLoading(true);
-
-        const response = await fetch(
-          `${ENDPOINT}/api/coursedetails/${id}`
-        );
+        const response = await fetch(`${ENDPOINT}/api/coursedetails/${id}`);
         const data = await response.json();
+    
+        // Define the dummy quiz data
+        const quizData = {
+          title: "Python Quiz",
+          type: "quiz",
+          quiz: {
+            passingMarks: 2,
+            questions: [
+              {
+                question: "What is Python?",
+                options: [
+                  "Programming Language",
+                  "Markup Language",
+                  "Assembly Language",
+                  "Low Level Language",
+                ],
+                correctAnswer: 0,
+              },
+              {
+                question: "Which keyword is used to define a function in Python?",
+                options: ["function", "void", "def", "define"],
+                correctAnswer: 2,
+              },
+            ],
+          },
+        };
+    
+        // Update the data by appending quizData to the items array of each module
+        const updatedModules = data.module.map((module) => ({
+          ...module,
+          items: [...module.items, quizData],
+        }));
+    
         const pdf = data.others.curriculum[0].moduleContentUrl[0];
         setPdf(pdf);
-        setCourseDetails(data);
-        setModules(data.module || []);
-        const firstVideoUrl = data.module[0].items[0].link; // Get the video URL
-        // console.log(data.module);
-        setVideo(firstVideoUrl); // Update the video state
+    
+        // Update course details with the modified data
+        setCourseDetails({ ...data, module: updatedModules });
+        setModules(updatedModules || []);
+    
+        // Safely get the first video URL
+        const firstVideoUrl =
+          updatedModules[0]?.items.find((item) => item.type === "video")?.link;
+    
+        if (firstVideoUrl) {
+          setVideo(firstVideoUrl); // Update the video state
+        }
       } catch (err) {
-        console.log(err)
+        console.log(err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
+    
     fetchCourseDetails();
   }, [id]);
 
@@ -236,7 +262,7 @@ function CoursePage() {
         <div className="back-button-2" onClick={() => window.history.back()}>
           <ArrowBack />
         </div>
-        <div className="header-title">Introduction LearnPress – LMS Plugin</div>
+        <div className="header-title"> {courseDetails.title || "Welcome to LearnIt"} </div>
       </div>
       <div className="course-page">
 
@@ -307,6 +333,7 @@ function CoursePage() {
                 </Collapse>
               </div>
             ))}
+
           </div>
           <div className="course-content">
             <h2>{currentLesson.title}</h2>
@@ -315,7 +342,7 @@ function CoursePage() {
                 <div className="video-container">
                   {/* <p>${currentLesson.title} content description...</p> */}
                   {currentLesson && currentLesson.link ? (
-                    <video controls autoPlay name="media">
+                    <video controls name="media">
                       <source src={currentLesson.link} type="video/mp4" />
                     </video>
                   ) : (
@@ -337,11 +364,6 @@ function CoursePage() {
                       <li>Read each question carefully.</li>
                       <li>
                         Select the most appropriate answer for each question.
-                      </li>
-                      <li>
-                        You need to answer at least{" "}
-                        {currentLesson.quiz.passingMarks} questions correctly to
-                        pass the quiz.
                       </li>
                       <li>
                         You can navigate through questions using the pagination at

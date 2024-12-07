@@ -14,7 +14,7 @@ import { NavigateBefore } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import './Styles/CreateQuiz.css';
 
-const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
 const CreateQuiz = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const CreateQuiz = () => {
     quizTitle: '',
     passingScore: '',
     questions: [],
-    courseName: '', 
+    courseName: '',
   });
 
   const handleAddQuestion = () => {
@@ -57,10 +57,17 @@ const CreateQuiz = () => {
   };
 
   const handleSubmitQuiz = async () => {
-    if (!quizDetails.passingScore || quizDetails.questions.length === 0 || !quizDetails.courseName||!quizDetails.quizTitle) {
+
+    if (!quizDetails.passingScore || quizDetails.questions.length === 0 || !quizDetails.courseName || !quizDetails.quizTitle) {
       alert('Please fill in all required fields.');
       return;
     }
+
+    if (quizDetails.passingScore < 0 || quizDetails.passingScore > 100) {
+      alert('Please enter a valid passing score.');
+      return;
+    }
+
     // const courseId = await getCourseIdByName(quizDetails.courseName);
     // if (!courseId) {
     //   return; // Stop if courseId is not found
@@ -70,7 +77,7 @@ const CreateQuiz = () => {
       quizTitle: quizDetails.quizTitle,
       courseName: quizDetails.courseName,
       passingScore: quizDetails.passingScore,
-      
+
       questions: quizDetails.questions,
     };
     try {
@@ -297,7 +304,7 @@ const CreateQuiz = () => {
               ))}
             </Box>
             <Box className="quiz_creation-correct-answer-section">
-              <Typography variant="h6" className="quiz_creation-correct-answer-label" sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Poppins', textAlign: 'center', marginBottom: '5px', marginTop: '5px',}}>
+              <Typography variant="h6" className="quiz_creation-correct-answer-label" sx={{ color: 'white', fontWeight: 'bold', fontFamily: 'Poppins', textAlign: 'center', marginBottom: '5px', marginTop: '5px', }}>
                 Correct Answer
               </Typography>
               <RadioGroup
@@ -329,27 +336,27 @@ const CreateQuiz = () => {
           </Box>
         ))}
         <Box className="quiz_creation-add-question-button">
-        <Button
-          variant="outlined"
-          startIcon={<AddCircleOutlineIcon />}
-          onClick={handleAddQuestion}
-          sx={{
-            color: 'white',
-            fontFamily: 'Poppins, sans-serif', // Set font family to Poppins
-            fontWeight: 500, // Set font weight to 500
-            backgroundColor: '#ff9100',// Set background color
-            '&:hover': {
-              backgroundColor: '#ff5e00', // Hover background color
-            },
-          }}
-        >
-          Add Question
-        </Button>
+          <Button
+            variant="outlined"
+            startIcon={<AddCircleOutlineIcon />}
+            onClick={handleAddQuestion}
+            sx={{
+              color: 'white',
+              fontFamily: 'Poppins, sans-serif', // Set font family to Poppins
+              fontWeight: 500, // Set font weight to 500
+              backgroundColor: '#ff9100',// Set background color
+              '&:hover': {
+                backgroundColor: '#ff5e00', // Hover background color
+              },
+            }}
+          >
+            Add Question
+          </Button>
         </Box>
       </Box>
 
       <Box className="quiz_creation-buttons-container">
-      <Button
+        <Button
           variant="outlined"
           startIcon={<NavigateBefore />}
           onClick={() => navigate('/instructor-dashboard')}

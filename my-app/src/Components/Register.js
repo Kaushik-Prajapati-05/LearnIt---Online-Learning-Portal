@@ -5,7 +5,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import './Styles/Register.css';
 
 
-const ENDPOINT= process.env.BACKEND_URL ||  "http://localhost:8000";
+const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
 function Register({ onClose, onLogin }) {
   const [role, setRole] = useState('Student'); // Default role
@@ -13,7 +13,7 @@ function Register({ onClose, onLogin }) {
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -31,7 +31,10 @@ function Register({ onClose, onLogin }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
+  const validateusername = (username) => {
+    const usernameRegex = /^.{1,12}$/;
+    return usernameRegex.test(username);
+  };
   const validatePassword = (password) => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,12}$/;
     return passwordRegex.test(password);
@@ -40,9 +43,14 @@ function Register({ onClose, onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Email validation
     if (!validateEmail(userEmail)) {
       setError('Invalid email format. Email should contain "@" with characters before and after.');
+      setSuccess('');
+      return;
+    }
+
+    if (!validateusername(username)) {
+      setError('Username can contain at max 12 charecters.');
       setSuccess('');
       return;
     }
@@ -99,21 +107,21 @@ function Register({ onClose, onLogin }) {
   return (
     <div className="login-overlay">
       <div className="login-container">
-      <button className="close-btn" onClick={onClose}>
+        <button className="close-btn" onClick={onClose}>
           <CloseIcon style={{ fontSize: '24px', color: '#ffffff' }} /> {/* Close Icon */}
         </button>
         <h2 className="login-title">Create a new account</h2>
 
         {/* Role Selection Buttons */}
         <div className="role-buttons-container">
-          <button 
+          <button
             className={`role-button ${role === 'Student' ? 'active' : ''}`}
             onClick={() => handleRoleChange('Student')}
           >
             Student
           </button>
-          <button 
-            className={`role-button ${role === 'Instructor' ? 'active' : ''}`} 
+          <button
+            className={`role-button ${role === 'Instructor' ? 'active' : ''}`}
             onClick={() => handleRoleChange('Instructor')}
           >
             Instructor
@@ -136,48 +144,48 @@ function Register({ onClose, onLogin }) {
             required
           />
           <div className="password-container" style={{ position: 'relative' }}>
-        <input
-          type={showPassword ? 'text' : 'password'}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <IconButton
-          onClick={togglePasswordVisibility}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'white',
-          }}
-        >
-          {showPassword ? <Visibility /> : <VisibilityOff />}
-        </IconButton>
-      </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <IconButton
+              onClick={togglePasswordVisibility}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'white',
+              }}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </div>
 
-      <div className="password-container" style={{ position: 'relative' }}>
-        <input
-          type={showConfirmPassword ? 'text' : 'password'}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <IconButton
-          onClick={togglePasswordVisibility2}
-          style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'white',
-          }}
-        >
-          {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-        </IconButton>
-      </div>
+          <div className="password-container" style={{ position: 'relative' }}>
+            <input
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <IconButton
+              onClick={togglePasswordVisibility2}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'white',
+              }}
+            >
+              {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </div>
 
           <button type="submit" className="login-button">Register</button>
         </form>

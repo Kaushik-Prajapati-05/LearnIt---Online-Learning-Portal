@@ -2,17 +2,45 @@ import React, { useState, useEffect } from "react";
 import "./Styles/StartLearning.css";
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { FaMedal } from 'react-icons/fa';
+import Header from "./Header";
 import Header2 from "./HeaderAfterSignIn";
 import Footer from "./Footer";
 import FeedbackPage from "./FeedbackPage";
 const ENDPOINT = process.env.BACKEND_URL || "http://localhost:8000";
 
-
+const students = [
+  {
+    id: 1,
+    name: 'Jish Chanchapra',
+    totalScore: 90
+  },
+  {
+    id: 2,
+    name: 'Kaushik Prajapati',
+    totalScore: 85
+  },
+  {
+    id: 3,
+    name: 'Zenil Rupareliya',
+    totalScore: 80
+  },
+  {
+    id: 4,
+    name: 'Parv Patel',
+    totalScore: 75
+  },
+  {
+    id: 5,
+    name: 'Heer Shah',
+    totalScore: 70
+  }
+];
 
 function StartLearning() {
-  const { id } = useParams();
 
+  const { id } = useParams();
+  const isLoggedIn = localStorage.getItem("accessToken") !== null;
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,7 +79,7 @@ function StartLearning() {
   // console.log(courses);
   return (
     <>
-      <Header2 />
+      {isLoggedIn ? <Header2 /> : <Header />}
       <div className="course-header-2">
         <h1>{courses.title || "Course Title"}</h1>
       </div>
@@ -126,6 +154,13 @@ function StartLearning() {
                 Instructor
               </div>
               <div
+                className={`course-tab-2 ${activeTab === "leaderboard" ? "course-tab-active-2" : ""
+                  }`}
+                onClick={() => showTab("leaderboard")}
+              >
+                Leaderboard
+              </div>
+              <div
                 className={`course-tab-2 ${activeTab === "feedback" ? "course-tab-active-2" : ""
                   }`}
                 onClick={() => showTab("feedback")}
@@ -188,18 +223,33 @@ function StartLearning() {
                   <p>👉 Students Taught: {courses.taughtStudents || 0}+</p>
                   <p>👉 Courses Offered: {courses.offeredCourses || 0}</p>
                   <p>👉 Rating: {courses.rating || "N/A"}</p>
-                  <a
-                    href={courses.linkedinUrl || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="linkedin-link-2"
-                  >
-                    <FaLinkedin size={30} />
-                  </a>
                 </div>
               </div>
             )}
-
+            {activeTab === 'leaderboard' && (
+              <div className="learnpress-tab-content">
+                <div className="leaderboard-container">
+                  <div className="leaderboard-list">
+                    {students
+                      .sort((a, b) => b.totalScore - a.totalScore) // Sorting by totalScore in descending order
+                      .map((student, index) => (
+                        <div className="leaderboard-row" key={student.id}>
+                          <div className="rank">
+                            {index + 1 === 1 && <FaMedal className="medal gold" />}
+                            {index + 1 === 2 && <FaMedal className="medal silver" />}
+                            {index + 1 === 3 && <FaMedal className="medal bronze" />}
+                            {index + 1 > 3 && index + 1} {/* Show rank number only for positions 4 and below */}
+                          </div>
+                          <div className="profile">
+                            <span className="name">{student.name}</span>
+                          </div>
+                          <div className="score">{student.totalScore}</div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            )}
             {activeTab === "feedback" && (
               <FeedbackPage />
             )}
