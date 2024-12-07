@@ -161,8 +161,17 @@ const CreateCourse = () => {
         module.moduleVideoUrl = videoUrl; // Save the uploaded video URL
       }
     }
+    var uploadedImage = "";
+    if (courseDetails.courseImage) {
+       uploadedImage = await uploadCourseImage(courseDetails.courseImage);
+      // console.log(uploadedImage); 
+      //  courseData = {
+      //   ...courseDetails,
+      //   image: uploadedImage,
+      // };
+    }
 
-    var courseData = {
+    const courseData = {
       instructorId: userInfo._id, // Example: dynamically set based on logged-in user
       instructorName: userInfo.userName, // Example: dynamically set based on logged-in user
       title: courseDetails.title,
@@ -171,7 +180,7 @@ const CreateCourse = () => {
       primaryLanguage: courseDetails.primaryLanguage,
       subtitle: courseDetails.subtitle,
       description: courseDetails.description,
-      image: courseDetails.image,
+      image: uploadedImage,
       welcomeMessage: courseDetails.welcomeMessage,
       pricing: courseDetails.pricing,
       objectives: courseDetails.objectives,
@@ -180,14 +189,6 @@ const CreateCourse = () => {
     };
 
     
-    if (courseDetails.courseImage) {
-      const uploadedImage = await uploadCourseImage(courseDetails.courseImage);
-      // console.log(uploadedImage); 
-       courseData = {
-        ...courseDetails,
-        image: uploadedImage,
-      };
-    }
 
 
     try {
